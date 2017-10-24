@@ -1,0 +1,19 @@
+format:
+	/* 이 섹션으로 링크 방침을 기술 */
+	code(align:1, logic:0x24,      file:0x24);
+	data(align:4, logic:stack_end, file:code_end);
+
+file:
+	/* 이 섹션으로 커맨드 라인에 끝까지 쓸 수 없었다
+		.obj 파일, .lib 파일을 기재 */
+	/* 추가로 이 섹션은 풀 패스로 써도 괜찮다.  */
+	/* 예：  c:/osask/gg00libc.lib;  */
+	../../z_tools/haribote/harilibc.lib;
+	../../z_tools/haribote/golibc.lib;
+
+label:
+	/* 반드시 링크하지 않으면 안 되는 라벨을 지정 */
+	/* 엔트리 포인트를 지정하면 좋다고 생각해 주세요 */
+	_HariStartup;
+
+	/* 상기 3섹션의 순서는 바꿔서는 안됩니다!  */

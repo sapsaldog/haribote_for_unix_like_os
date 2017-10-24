@@ -1,0 +1,15 @@
+/* 「후지산」문부성 창가 嚴谷小波 작사 */
+
+$E"SJIS";					T120L4O4
+
+$K"머리를 구름 위로 내밀고";            G.G8AGEC8D8E2       D.G8GF8E8D2.R 
+$K"사방의 산을 내려 보고";              G.G8ECA.B8>C<A      G.A8G8F8E8D8C2.R 
+$K"천둥소리 아래에서 듣는";             D.D8DDC8D8E8F8G2    A.B8>C<AG2.R 
+$K"후지는 일본 제일의 산";              >C2<AGE.E8AG        FED.C8C2.R  
+
+$K"푸른 하늘 높게 우뚝 솟아";            G.G8AGEC8D8E2       D.G8GF8E8D2.R 
+$K"몸에 눈 옷을 입고";                   G.G8ECA.B8>C<A      G.A8G8F8E8D8C2.R 
+$K"안개의 옷자락을 멀리 잡아당기며";     D.D8DDC8D8E8F8G2    A.B8>C<AG2.R 
+$K"후지는 일본 제일의 산";               >C2<AGE.E8AG        FED.C8C2.R 
+
+$K"";						R1R1
