@@ -1,7 +1,7 @@
 ; hello-os
 ; TAB=4
 
-		ORG		0x7c00			; 이 프로그램이 어디에 read되는가
+[ORG		0x7c00]			; 이 프로그램이 어디에 read되는가
 
 ; 이하는 표준적인 FAT12 포맷 플로피 디스크를 위한 기술
 
@@ -55,6 +55,7 @@ msg:
 		DB		0x0a			; 개행
 		DB		0
 
-		RESB	0x7dfe-$		; 0x7dfe까지를 0x00로 채우는 명령
+		times 510 - ($-$$) db 0		; 0x7dfe까지를 0x00로 채우는 명령
 
 		DB		0x55, 0xaa
+
