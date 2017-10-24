@@ -1,50 +1,22 @@
-TOOLPATH = ../z_tools/
-MAKE     = $(TOOLPATH)make.exe -r
-NASK     = $(TOOLPATH)nask.exe
-EDIMG    = $(TOOLPATH)edimg.exe
-IMGTOL   = $(TOOLPATH)imgtol.com
-COPY     = copy
-DEL      = del
+# $@ = target file
+# $< = first dependency
+# $^ = all dependencies
 
-# 디폴트 동작
+# First rule is the one executed when no parameters are fed to the Makefile
+all: run
 
-default :
-	$(MAKE) img
+# Notice how dependencies are built as needed
+os-image.bin : ipl10.bin haribote.bin
+	cat $^ > os-image.bin
 
-# 파일 생성 규칙
+haribote.bin: haribote.asm 
+	nasm $< -f bin -o $@	
 
-ipl10.bin : ipl10.nas Makefile
-	$(NASK) ipl10.nas ipl10.bin ipl10.lst
+ipl10.bin: ipl10.asm
+	nasm $< -f bin -o $@
 
-haribote.sys : haribote.nas Makefile
-	$(NASK) haribote.nas haribote.sys haribote.lst
+run: os-image.bin
+	qemu-system-i386 -fda $<
 
-haribote.img : ipl10.bin haribote.sys Makefile
-	$(EDIMG)   imgin:../z_tools/fdimg0at.tek \
-		wbinimg src:ipl10.bin len:512 from:0 to:0 \
-		copy from:haribote.sys to:@: \
-		imgout:haribote.img
-
-# 커맨드
-
-img :
-	$(MAKE) haribote.img
-
-run :
-	$(MAKE) img
-	$(COPY) haribote.img ..\z_tools\qemu\fdimage0.bin
-	$(MAKE) -C ../z_tools/qemu
-
-install :
-	$(MAKE) img
-	$(IMGTOL) w a: haribote.img
-
-clean :
-	-$(DEL) ipl10.bin
-	-$(DEL) ipl10.lst
-	-$(DEL) haribote.sys
-	-$(DEL) haribote.lst
-
-src_only :
-	$(MAKE) clean
-	-$(DEL) haribote.img
+clean:
+	rm *.bin 
