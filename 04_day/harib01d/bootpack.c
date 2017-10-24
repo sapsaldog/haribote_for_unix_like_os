@@ -2,10 +2,10 @@ void io_hlt(void);
 
 void HariMain(void)
 {
-	int i; /* º¯¼ö ¼±¾ð.i¶ó°í ÇÏ´Â º¯¼ö´Â 32ºñÆ® Á¤¼öÇü */
-	char *p; /* p¶ó°í ÇÏ´Â º¯¼ö´Â BYTE [...]¿ë ¹øÁö */
+	int i; /* ë³€ìˆ˜ ì„ ì–¸.ië¼ê³  í•˜ëŠ” ë³€ìˆ˜ëŠ” 32ë¹„íŠ¸ ì •ìˆ˜í˜• */
+	char *p; /* pë¼ê³  í•˜ëŠ” ë³€ìˆ˜ëŠ” BYTE [...]ìš© ë²ˆì§€ */
 
-	p = (char *) 0xa0000; /* ¹øÁö¸¦ ´ëÀÔ */
+	p = (char *) 0xa0000; /* ë²ˆì§€ë¥¼ ëŒ€ìž… */
 
 	for (i = 0; i <= 0xffff; i++) {
 		*(p + i) = i & 0x0f;

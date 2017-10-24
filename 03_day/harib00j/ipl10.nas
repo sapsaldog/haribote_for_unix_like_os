@@ -1,83 +1,83 @@
 ; haribote-ipl
 ; TAB=4
 
-CYLS	EQU		10				; ¾îµð±îÁö ReadÇÒ±î
+CYLS	EQU		10				; ì–´ë””ê¹Œì§€ Readí• ê¹Œ
 
-		ORG		0x7c00			; ÀÌ ÇÁ·Î±×·¥ÀÌ ¾îµð¿¡ ReadµÇ´Â°¡
+		ORG		0x7c00			; ì´ í”„ë¡œê·¸ëž¨ì´ ì–´ë””ì— Readë˜ëŠ”ê°€
 
-; ÀÌÇÏ´Â Ç¥ÁØÀûÀÎ FAT12 Æ÷¸Ë ÇÃ·ÎÇÇ µð½ºÅ©¸¦ À§ÇÑ ±â¼ú
+; ì´í•˜ëŠ” í‘œì¤€ì ì¸ FAT12 í¬ë§· í”Œë¡œí”¼ ë””ìŠ¤í¬ë¥¼ ìœ„í•œ ê¸°ìˆ 
 
 		JMP		entry
 		DB		0x90
-		DB		"HARIBOTE"		; boot sectorÀÇ ÀÌ¸§À» ÀÚÀ¯·Ó°Ô ½áµµ ÁÁ´Ù(8¹ÙÀÌÆ®)
-		DW		512			; 1¼½ÅÍ Å©±â(512·Î ÇØ¾ß ÇÔ)
-		DB		1			; Å¬·¯½ºÅÍ Å©±â(1¼½ÅÍ·Î ÇØ¾ß ÇÔ)
-		DW		1			; FAT°¡ ¾îµð¿¡¼­ ½ÃÀÛµÉ±î(º¸ÅëÀº 1 ¼½ÅÍÂ°ºÎÅÍ)
-		DB		2			; FAT °³¼ö(2·Î ÇØ¾ß ÇÔ)
-		DW		224			; ·çÆ® µð·ºÅä¸® ¿µ¿ªÀÇ Å©±â(º¸ÅëÀº 224¿£Æ®¸®·Î ÇÑ´Ù)
-		DW		2880			; µå¶óÀÌºê Å©±â(2880¼½ÅÍ·Î ÇØ¾ß ÇÔ)
-		DB		0xf0			; ¹Ìµð¾î Å¸ÀÔ(0xf0·Î ÇØ¾ß ÇÔ)
-		DW		9			; FAT¿µ¿ªÀÇ ±æÀÌ(9¼½ÅÍ·Î ÇØ¾ß ÇÔ)
-		DW		18			; 1Æ®·°¿¡ ¸î°³ÀÇ ¼½ÅÍ°¡ ÀÖÀ»±î(18·Î ÇØ¾ß ÇÔ)
-		DW		2			; Çìµå ¼ö(2·Î ÇØ¾ß ÇÔ)
-		DD		0			; ÆÄÆ¼¼ÇÀ» »ç¿ëÇÏÁö ¾Ê±â ¶§¹®¿¡ ¿©±â´Â ¹Ýµå½Ã 0
-		DD		2880			; µå¶óÀÌºê Å©±â¸¦ ÇÑ¹ø ´õ write
-		DB		0,0,0x29		; Àß ¸ð¸£Áö¸¸ ÀÌ °ªÀ¸·Î ÇØ µÎ¸é ÁÁÀº °Í °°´Ù
-		DD		0xffffffff		; ¾Æ¸¶, º¼·ý ½Ã¸®¾ó ¹øÈ£
-		DB		"HARIBOTEOS "		; µð½ºÅ© ÀÌ¸§(11¹ÙÀÌÆ®)
-		DB		"FAT12   "		; Æ÷¸Ë ÀÌ¸§(8¹ÙÀÌÆ®)
-		RESB	18				; ¿ì¼± 18¹ÙÀÌÆ®¸¦ ºñ¾î µÐ´Ù
+		DB		"HARIBOTE"		; boot sectorì˜ ì´ë¦„ì„ ìžìœ ë¡­ê²Œ ì¨ë„ ì¢‹ë‹¤(8ë°”ì´íŠ¸)
+		DW		512			; 1ì„¹í„° í¬ê¸°(512ë¡œ í•´ì•¼ í•¨)
+		DB		1			; í´ëŸ¬ìŠ¤í„° í¬ê¸°(1ì„¹í„°ë¡œ í•´ì•¼ í•¨)
+		DW		1			; FATê°€ ì–´ë””ì—ì„œ ì‹œìž‘ë ê¹Œ(ë³´í†µì€ 1 ì„¹í„°ì§¸ë¶€í„°)
+		DB		2			; FAT ê°œìˆ˜(2ë¡œ í•´ì•¼ í•¨)
+		DW		224			; ë£¨íŠ¸ ë””ë ‰í† ë¦¬ ì˜ì—­ì˜ í¬ê¸°(ë³´í†µì€ 224ì—”íŠ¸ë¦¬ë¡œ í•œë‹¤)
+		DW		2880			; ë“œë¼ì´ë¸Œ í¬ê¸°(2880ì„¹í„°ë¡œ í•´ì•¼ í•¨)
+		DB		0xf0			; ë¯¸ë””ì–´ íƒ€ìž…(0xf0ë¡œ í•´ì•¼ í•¨)
+		DW		9			; FATì˜ì—­ì˜ ê¸¸ì´(9ì„¹í„°ë¡œ í•´ì•¼ í•¨)
+		DW		18			; 1íŠ¸ëŸ­ì— ëª‡ê°œì˜ ì„¹í„°ê°€ ìžˆì„ê¹Œ(18ë¡œ í•´ì•¼ í•¨)
+		DW		2			; í—¤ë“œ ìˆ˜(2ë¡œ í•´ì•¼ í•¨)
+		DD		0			; íŒŒí‹°ì…˜ì„ ì‚¬ìš©í•˜ì§€ ì•Šê¸° ë•Œë¬¸ì— ì—¬ê¸°ëŠ” ë°˜ë“œì‹œ 0
+		DD		2880			; ë“œë¼ì´ë¸Œ í¬ê¸°ë¥¼ í•œë²ˆ ë” write
+		DB		0,0,0x29		; ìž˜ ëª¨ë¥´ì§€ë§Œ ì´ ê°’ìœ¼ë¡œ í•´ ë‘ë©´ ì¢‹ì€ ê²ƒ ê°™ë‹¤
+		DD		0xffffffff		; ì•„ë§ˆ, ë³¼ë¥¨ ì‹œë¦¬ì–¼ ë²ˆí˜¸
+		DB		"HARIBOTEOS "		; ë””ìŠ¤í¬ ì´ë¦„(11ë°”ì´íŠ¸)
+		DB		"FAT12   "		; í¬ë§· ì´ë¦„(8ë°”ì´íŠ¸)
+		RESB	18				; ìš°ì„  18ë°”ì´íŠ¸ë¥¼ ë¹„ì–´ ë‘”ë‹¤
 
-; ÇÁ·Î±×·¥ º»Ã¼
+; í”„ë¡œê·¸ëž¨ ë³¸ì²´
 
 entry:
-		MOV		AX, 0			; ·¹Áö½ºÅÍ ÃÊ±âÈ­
+		MOV		AX, 0			; ë ˆì§€ìŠ¤í„° ì´ˆê¸°í™”
 		MOV		SS,AX
 		MOV		SP,0x7c00
 		MOV		DS,AX
 
-; µð½ºÅ©¸¦ ÀÐ´Â´Ù
+; ë””ìŠ¤í¬ë¥¼ ì½ëŠ”ë‹¤
 
 		MOV		AX,0x0820
 		MOV		ES,AX
-		MOV		CH, 0			; ½Ç¸°´õ 0
-		MOV		DH, 0			; Çìµå 0
-		MOV		CL, 2			; ¼½ÅÍ 2
+		MOV		CH, 0			; ì‹¤ë¦°ë” 0
+		MOV		DH, 0			; í—¤ë“œ 0
+		MOV		CL, 2			; ì„¹í„° 2
 readloop:
-		MOV		SI, 0			; ½ÇÆÐ È¸¼ö¸¦ ¼¼´Â ·¹Áö½ºÅÍ
+		MOV		SI, 0			; ì‹¤íŒ¨ íšŒìˆ˜ë¥¼ ì„¸ëŠ” ë ˆì§€ìŠ¤í„°
 retry:
-		MOV		AH, 0x02		; AH=0x02 : µð½ºÅ© read
-		MOV		AL, 1			; 1¼½ÅÍ
+		MOV		AH, 0x02		; AH=0x02 : ë””ìŠ¤í¬ read
+		MOV		AL, 1			; 1ì„¹í„°
 		MOV		BX,0
-		MOV		DL, 0x00		; Aµå¶óÀÌºê
-		INT		0x13			; µð½ºÅ© BIOS È£Ãâ
-		JNC		next			; ¿¡·¯°¡ ÀÏ¾î³ªÁö ¾ÊÀ¸¸é next¿¡
-		ADD		SI, 1			; SI¿¡ 1À» ´õÇÑ´Ù
-		CMP		SI, 5			; SI¿Í 5¸¦ ºñ±³
-		JAE		error			; SI >= 5 ÀÌ¸é error¿¡
+		MOV		DL, 0x00		; Aë“œë¼ì´ë¸Œ
+		INT		0x13			; ë””ìŠ¤í¬ BIOS í˜¸ì¶œ
+		JNC		next			; ì—ëŸ¬ê°€ ì¼ì–´ë‚˜ì§€ ì•Šìœ¼ë©´ nextì—
+		ADD		SI, 1			; SIì— 1ì„ ë”í•œë‹¤
+		CMP		SI, 5			; SIì™€ 5ë¥¼ ë¹„êµ
+		JAE		error			; SI >= 5 ì´ë©´ errorì—
 		MOV		AH,0x00
-		MOV		DL, 0x00		; Aµå¶óÀÌºê
-		INT		0x13			; µå¶óÀÌºêÀÇ ¸®¼ÂÆ®
+		MOV		DL, 0x00		; Aë“œë¼ì´ë¸Œ
+		INT		0x13			; ë“œë¼ì´ë¸Œì˜ ë¦¬ì…‹íŠ¸
 		JMP		retry
 next:
-		MOV		AX, ES			; ÁÖ¼Ò¸¦ 0x200 ÁøÇàÇÑ´Ù
+		MOV		AX, ES			; ì£¼ì†Œë¥¼ 0x200 ì§„í–‰í•œë‹¤
 		ADD		AX,0x0020
-		MOV		ES, AX			; ADD ES, 0x020 ¶ó°í ÇÏ´Â ¸í·ÉÀÌ ¾ø±â ¶§¹®¿¡ ÀÌ·¸°Ô ÇÏ°í ÀÖ´Ù
-		ADD		CL, 1			; CL¿¡ 1À» ´õÇÑ´Ù
-		CMP		CL, 18			; CL¿Í 18À» ºñ±³
-		JBE		readloop		; CL <= 18 ÀÌ¶ó¸é readloop¿¡
+		MOV		ES, AX			; ADD ES, 0x020 ë¼ê³  í•˜ëŠ” ëª…ë ¹ì´ ì—†ê¸° ë•Œë¬¸ì— ì´ë ‡ê²Œ í•˜ê³  ìžˆë‹¤
+		ADD		CL, 1			; CLì— 1ì„ ë”í•œë‹¤
+		CMP		CL, 18			; CLì™€ 18ì„ ë¹„êµ
+		JBE		readloop		; CL <= 18 ì´ë¼ë©´ readloopì—
 		MOV		CL,1
 		ADD		DH,1
 		CMP		DH,2
-		JB		readloop		; DH < 2 ¶ó¸é readloop¿¡
+		JB		readloop		; DH < 2 ë¼ë©´ readloopì—
 		MOV		DH,0
 		ADD		CH,1
 		CMP		CH,CYLS
-		JB		readloop		; CH < CYLS ¶ó¸é readloop¿¡
+		JB		readloop		; CH < CYLS ë¼ë©´ readloopì—
 
-; ´Ù ÀÐ¾úÀ¸¹Ç·Î haribote.sys¸¦ ½ÇÇàÇÑ´Ù!
+; ë‹¤ ì½ì—ˆìœ¼ë¯€ë¡œ haribote.sysë¥¼ ì‹¤í–‰í•œë‹¤!
 
-		MOV		[0x0ff0], CH		; IPLÀÌ ¾îµð±îÁö ÀÐ¾ú´ÂÁö¸¦ ¸Þ¸ð
+		MOV		[0x0ff0], CH		; IPLì´ ì–´ë””ê¹Œì§€ ì½ì—ˆëŠ”ì§€ë¥¼ ë©”ëª¨
 		JMP		0xc200
 
 error:
@@ -86,22 +86,22 @@ error:
 		MOV		SI,msg
 putloop:
 		MOV		AL,[SI]
-		ADD		SI, 1			; SI¿¡ 1À» ´õÇÑ´Ù
+		ADD		SI, 1			; SIì— 1ì„ ë”í•œë‹¤
 		CMP		AL,0
 		JE		fin
-		MOV		AH, 0x0e		; ÇÑ ±ÛÀÚ Ç¥½Ã function
-		MOV		BX, 15			; Ä®¶ó ÄÚµå
-		INT		0x10			; ºñµð¿À BIOS È£Ãâ
+		MOV		AH, 0x0e		; í•œ ê¸€ìž í‘œì‹œ function
+		MOV		BX, 15			; ì¹¼ë¼ ì½”ë“œ
+		INT		0x10			; ë¹„ë””ì˜¤ BIOS í˜¸ì¶œ
 		JMP		putloop
 fin:
-		HLT					; ¹«¾ùÀÎ°¡ ÀÖÀ» ¶§±îÁö CPU¸¦ Á¤Áö½ÃÅ²´Ù
+		HLT					; ë¬´ì—‡ì¸ê°€ ìžˆì„ ë•Œê¹Œì§€ CPUë¥¼ ì •ì§€ì‹œí‚¨ë‹¤
 		JMP		fin			; Endless Loop
 msg:
-		DB		0x0a, 0x0a		; °³ÇàÀ» 2°³
+		DB		0x0a, 0x0a		; ê°œí–‰ì„ 2ê°œ
 		DB		"load error"
-		DB		0x0a			; °³Çà
+		DB		0x0a			; ê°œí–‰
 		DB		0
 
-		RESB	0x7dfe-$			; 0x7dfe±îÁö¸¦ 0x00·Î Ã¤¿ì´Â ¸í·É
+		RESB	0x7dfe-$			; 0x7dfeê¹Œì§€ë¥¼ 0x00ë¡œ ì±„ìš°ëŠ” ëª…ë ¹
 
 		DB		0x55, 0xaa

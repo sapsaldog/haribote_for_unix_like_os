@@ -1,10 +1,10 @@
 ; naskfunc
 ; TAB=4
 
-[FORMAT "WCOFF"]				; ¿ÀºêÁ§Æ® ÆÄÀÏÀ» ¸¸µå´Â ¸ðµå	
-[INSTRSET "i486p"]				; 486¸í·É±îÁö »ç¿ëÇÏ°í ½Í´Ù°í ÇÏ´Â ±â¼ú
-[BITS 32]					; 32ºñÆ® ¸ðµå¿ëÀÇ ±â°è¾î¸¦ ¸¸µé°Ô ÇÑ´Ù
-[FILE "naskfunc.nas"]				; ¿ø½Ã ÆÄÀÏ¸í Á¤º¸
+[FORMAT "WCOFF"]				; ì˜¤ë¸Œì íŠ¸ íŒŒì¼ì„ ë§Œë“œëŠ” ëª¨ë“œ	
+[INSTRSET "i486p"]				; 486ëª…ë ¹ê¹Œì§€ ì‚¬ìš©í•˜ê³  ì‹¶ë‹¤ê³  í•˜ëŠ” ê¸°ìˆ 
+[BITS 32]					; 32ë¹„íŠ¸ ëª¨ë“œìš©ì˜ ê¸°ê³„ì–´ë¥¼ ë§Œë“¤ê²Œ í•œë‹¤
+[FILE "naskfunc.nas"]				; ì›ì‹œ íŒŒì¼ëª… ì •ë³´
 
 		GLOBAL	_io_hlt, _io_cli, _io_sti, _io_stihlt
 		GLOBAL	_io_in8,  _io_in16,  _io_in32
@@ -77,14 +77,14 @@ _io_out32:	; void io_out32(int port, int data);
 		RET
 
 _io_load_eflags:	; int io_load_eflags(void);
-		PUSHFD		; PUSH EFLAGS ¶ó°í ÇÏ´Â ÀÇ¹Ì
+		PUSHFD		; PUSH EFLAGS ë¼ê³  í•˜ëŠ” ì˜ë¯¸
 		POP		EAX
 		RET
 
 _io_store_eflags:	; void io_store_eflags(int eflags);
 		MOV		EAX,[ESP+4]
 		PUSH	EAX
-		POPFD		; POP EFLAGS ¶ó°í ÇÏ´Â ÀÇ¹Ì
+		POPFD		; POP EFLAGS ë¼ê³  í•˜ëŠ” ì˜ë¯¸
 		RET
 
 _load_gdtr:		; void load_gdtr(int limit, int addr);
@@ -119,10 +119,10 @@ _asm_inthandler20:
 		MOV		AX,SS
 		CMP		AX,1*8
 		JNE		.from_app
-;	OS°¡ ¿òÁ÷ÀÌ°í ÀÖÀ» ¶§ ÀÎÅÍ·´Æ® µÇ¾úÀ¸¹Ç·Î °ÅÀÇ Áö±Ý±îÁö ´ë·Î
+;	OSê°€ ì›€ì§ì´ê³  ìžˆì„ ë•Œ ì¸í„°ëŸ½íŠ¸ ë˜ì—ˆìœ¼ë¯€ë¡œ ê±°ì˜ ì§€ê¸ˆê¹Œì§€ ëŒ€ë¡œ
 		MOV		EAX,ESP
-		PUSH	SS				; ÀÎÅÍ·´Æ® ½Ã SS¸¦ º¸Á¸
-		PUSH	EAX				; ÀÎÅÍ·´Æ® ½Ã ESP¸¦ º¸Á¸
+		PUSH	SS				; ì¸í„°ëŸ½íŠ¸ ì‹œ SSë¥¼ ë³´ì¡´
+		PUSH	EAX				; ì¸í„°ëŸ½íŠ¸ ì‹œ ESPë¥¼ ë³´ì¡´
 		MOV		AX,SS
 		MOV		DS,AX
 		MOV		ES,AX
@@ -133,21 +133,21 @@ _asm_inthandler20:
 		POP		ES
 		IRETD
 .from_app:
-;	¾îÇÃ¸®ÄÉÀÌ¼ÇÀÌ ¿òÁ÷ÀÌ°í ÀÖÀ» ¶§ ÀÎÅÍ·´Æ®µÇ¾ú´Ù
+;	ì–´í”Œë¦¬ì¼€ì´ì…˜ì´ ì›€ì§ì´ê³  ìžˆì„ ë•Œ ì¸í„°ëŸ½íŠ¸ë˜ì—ˆë‹¤
 		MOV		EAX,1*8
-		MOV		DS, AX			; DS¸¸ OS¿ëÀ¸·Î ÇÑ´Ù
-		MOV		ECX,[0xfe4]		; OSÀÇ ESP
+		MOV		DS, AX			; DSë§Œ OSìš©ìœ¼ë¡œ í•œë‹¤
+		MOV		ECX,[0xfe4]		; OSì˜ ESP
 		ADD		ECX,-8
-		MOV		[ECX+4], SS		; ÀÎÅÍ·´Æ® ½Ã SS¸¦ º¸Á¸
-		MOV		[ECX  ], ESP		; ÀÎÅÍ·´Æ® ½Ã ESP¸¦ º¸Á¸
+		MOV		[ECX+4], SS		; ì¸í„°ëŸ½íŠ¸ ì‹œ SSë¥¼ ë³´ì¡´
+		MOV		[ECX  ], ESP		; ì¸í„°ëŸ½íŠ¸ ì‹œ ESPë¥¼ ë³´ì¡´
 		MOV		SS,AX
 		MOV		ES,AX
 		MOV		ESP,ECX
 		CALL	_inthandler20
 		POP		ECX
 		POP		EAX
-		MOV		SS, AX			; SS¸¦ ¾îÇÃ¸®ÄÉÀÌ¼Ç¿ëÀ¸·Î µÇµ¹¸°´Ù
-		MOV		ESP, ECX		; ESPµµ ¾îÇÃ¸®ÄÉÀÌ¼Ç¿ëÀ¸·Î µÇµ¹¸°´Ù
+		MOV		SS, AX			; SSë¥¼ ì–´í”Œë¦¬ì¼€ì´ì…˜ìš©ìœ¼ë¡œ ë˜ëŒë¦°ë‹¤
+		MOV		ESP, ECX		; ESPë„ ì–´í”Œë¦¬ì¼€ì´ì…˜ìš©ìœ¼ë¡œ ë˜ëŒë¦°ë‹¤
 		POPAD
 		POP		DS
 		POP		ES
@@ -160,10 +160,10 @@ _asm_inthandler21:
 		MOV		AX,SS
 		CMP		AX,1*8
 		JNE		.from_app
-;	OS°¡ ¿òÁ÷ÀÌ°í ÀÖÀ» ¶§ ÀÎÅÍ·´Æ® µÇ¾úÀ¸¹Ç·Î °ÅÀÇ Áö±Ý±îÁö ´ë·Î
+;	OSê°€ ì›€ì§ì´ê³  ìžˆì„ ë•Œ ì¸í„°ëŸ½íŠ¸ ë˜ì—ˆìœ¼ë¯€ë¡œ ê±°ì˜ ì§€ê¸ˆê¹Œì§€ ëŒ€ë¡œ
 		MOV		EAX,ESP
-		PUSH	SS				; ÀÎÅÍ·´Æ® ½Ã SS¸¦ º¸Á¸
-		PUSH	EAX				; ÀÎÅÍ·´Æ® ½Ã ESP¸¦ º¸Á¸
+		PUSH	SS				; ì¸í„°ëŸ½íŠ¸ ì‹œ SSë¥¼ ë³´ì¡´
+		PUSH	EAX				; ì¸í„°ëŸ½íŠ¸ ì‹œ ESPë¥¼ ë³´ì¡´
 		MOV		AX,SS
 		MOV		DS,AX
 		MOV		ES,AX
@@ -174,21 +174,21 @@ _asm_inthandler21:
 		POP		ES
 		IRETD
 .from_app:
-;	¾îÇÃ¸®°¡ ¿òÁ÷ÀÌ°í ÀÖÀ» ¶§ ÀÎÅÍ·´Æ® µÇ¾ú´Ù
+;	ì–´í”Œë¦¬ê°€ ì›€ì§ì´ê³  ìžˆì„ ë•Œ ì¸í„°ëŸ½íŠ¸ ë˜ì—ˆë‹¤
 		MOV		EAX,1*8
-		MOV		DS, AX			; DS¸¸ OS¿ëÀ¸·Î ÇÑ´Ù
-		MOV		ECX,[0xfe4]		; OSÀÇ ESP
+		MOV		DS, AX			; DSë§Œ OSìš©ìœ¼ë¡œ í•œë‹¤
+		MOV		ECX,[0xfe4]		; OSì˜ ESP
 		ADD		ECX,-8
-		MOV		[ECX+4], SS		; ÀÎÅÍ·´Æ® ½Ã SS¸¦ º¸Á¸
-		MOV		[ECX  ], ESP		; ÀÎÅÍ·´Æ® ½Ã ESP¸¦ º¸Á¸
+		MOV		[ECX+4], SS		; ì¸í„°ëŸ½íŠ¸ ì‹œ SSë¥¼ ë³´ì¡´
+		MOV		[ECX  ], ESP		; ì¸í„°ëŸ½íŠ¸ ì‹œ ESPë¥¼ ë³´ì¡´
 		MOV		SS,AX
 		MOV		ES,AX
 		MOV		ESP,ECX
 		CALL	_inthandler21
 		POP		ECX
 		POP		EAX
-		MOV		SS, AX			; SS¸¦ ¾îÇÃ¸®ÄÉÀÌ¼Ç¿ëÀ¸·Î µÇµ¹¸°´Ù
-		MOV		ESP, ECX		; ESPµµ ¾îÇÃ¸®ÄÉÀÌ¼Ç¿ëÀ¸·Î µÇµ¹¸°´Ù
+		MOV		SS, AX			; SSë¥¼ ì–´í”Œë¦¬ì¼€ì´ì…˜ìš©ìœ¼ë¡œ ë˜ëŒë¦°ë‹¤
+		MOV		ESP, ECX		; ESPë„ ì–´í”Œë¦¬ì¼€ì´ì…˜ìš©ìœ¼ë¡œ ë˜ëŒë¦°ë‹¤
 		POPAD
 		POP		DS
 		POP		ES
@@ -201,10 +201,10 @@ _asm_inthandler2c:
 		MOV		AX,SS
 		CMP		AX,1*8
 		JNE		.from_app
-;	OS°¡ ¿òÁ÷ÀÌ°í ÀÖÀ» ¶§ ÀÎÅÍ·´Æ® µÇ¾úÀ¸¹Ç·Î °ÅÀÇ Áö±Ý±îÁö ´ë·Î
+;	OSê°€ ì›€ì§ì´ê³  ìžˆì„ ë•Œ ì¸í„°ëŸ½íŠ¸ ë˜ì—ˆìœ¼ë¯€ë¡œ ê±°ì˜ ì§€ê¸ˆê¹Œì§€ ëŒ€ë¡œ
 		MOV		EAX,ESP
-		PUSH	SS				; ÀÎÅÍ·´Æ® ½Ã SS¸¦ º¸Á¸
-		PUSH	EAX				; ÀÎÅÍ·´Æ® ½Ã ESP¸¦ º¸Á¸
+		PUSH	SS				; ì¸í„°ëŸ½íŠ¸ ì‹œ SSë¥¼ ë³´ì¡´
+		PUSH	EAX				; ì¸í„°ëŸ½íŠ¸ ì‹œ ESPë¥¼ ë³´ì¡´
 		MOV		AX,SS
 		MOV		DS,AX
 		MOV		ES,AX
@@ -215,28 +215,28 @@ _asm_inthandler2c:
 		POP		ES
 		IRETD
 .from_app:
-;	¾îÇÃ¸®°¡ ¿òÁ÷ÀÌ°í ÀÖÀ» ¶§ ÀÎÅÍ·´Æ® µÇ¾ú´Ù
+;	ì–´í”Œë¦¬ê°€ ì›€ì§ì´ê³  ìžˆì„ ë•Œ ì¸í„°ëŸ½íŠ¸ ë˜ì—ˆë‹¤
 		MOV		EAX,1*8
-		MOV		DS, AX			; DS¸¸ OS¿ëÀ¸·Î ÇÑ´Ù
-		MOV		ECX,[0xfe4]		; OSÀÇ ESP
+		MOV		DS, AX			; DSë§Œ OSìš©ìœ¼ë¡œ í•œë‹¤
+		MOV		ECX,[0xfe4]		; OSì˜ ESP
 		ADD		ECX,-8
-		MOV		[ECX+4], SS		; ÀÎÅÍ·´Æ® ½Ã SS¸¦ º¸Á¸
-		MOV		[ECX  ], ESP		; ÀÎÅÍ·´Æ® ½Ã ESP¸¦ º¸Á¸
+		MOV		[ECX+4], SS		; ì¸í„°ëŸ½íŠ¸ ì‹œ SSë¥¼ ë³´ì¡´
+		MOV		[ECX  ], ESP		; ì¸í„°ëŸ½íŠ¸ ì‹œ ESPë¥¼ ë³´ì¡´
 		MOV		SS,AX
 		MOV		ES,AX
 		MOV		ESP,ECX
 		CALL	_inthandler2c
 		POP		ECX
 		POP		EAX
-		MOV		SS, AX			; SS¸¦ ¾îÇÃ¸®ÄÉÀÌ¼Ç¿ëÀ¸·Î µÇµ¹¸°´Ù
-		MOV		ESP, ECX		; ESPµµ ¾îÇÃ¸®ÄÉÀÌ¼Ç¿ëÀ¸·Î µÇµ¹¸°´Ù
+		MOV		SS, AX			; SSë¥¼ ì–´í”Œë¦¬ì¼€ì´ì…˜ìš©ìœ¼ë¡œ ë˜ëŒë¦°ë‹¤
+		MOV		ESP, ECX		; ESPë„ ì–´í”Œë¦¬ì¼€ì´ì…˜ìš©ìœ¼ë¡œ ë˜ëŒë¦°ë‹¤
 		POPAD
 		POP		DS
 		POP		ES
 		IRETD
 
 _memtest_sub:	; unsigned int memtest_sub(unsigned int start, unsigned int end)
-		PUSH	EDI						; (EBX, ESI, EDI µµ »ç¿ëÇÏ°í ½Í±â ¶§¹®¿¡)
+		PUSH	EDI						; (EBX, ESI, EDI ë„ ì‚¬ìš©í•˜ê³  ì‹¶ê¸° ë•Œë¬¸ì—)
 		PUSH	ESI
 		PUSH	EBX
 		MOV		ESI, 0xaa55aa55			; pat0 = 0xaa55aa55;
@@ -277,81 +277,81 @@ _farcall:		; void farcall(int eip, int cs);
 		RET
 
 _asm_hrb_api:
-		; Ã³À½ºÎÅÍ ÀÎÅÍ·´Æ® ±ÝÁö°¡ µÇ¾î ÀÖ´Ù
+		; ì²˜ìŒë¶€í„° ì¸í„°ëŸ½íŠ¸ ê¸ˆì§€ê°€ ë˜ì–´ ìžˆë‹¤
 		PUSH	DS
 		PUSH	ES
-		PUSHAD		; º¸Á¸À» À§ÇÑ PUSH
+		PUSHAD		; ë³´ì¡´ì„ ìœ„í•œ PUSH
 		MOV		EAX,1*8
-		MOV		DS, AX			; DS¸¸ OS¿ëÀ¸·Î ÇÑ´Ù
-		MOV		ECX,[0xfe4]		; OSÀÇ ESP
+		MOV		DS, AX			; DSë§Œ OSìš©ìœ¼ë¡œ í•œë‹¤
+		MOV		ECX,[0xfe4]		; OSì˜ ESP
 		ADD		ECX,-40
-		MOV		[ECX+32], ESP		; ¾îÇÃ¸®ÄÉÀÌ¼ÇÀÇ ESP¸¦ º¸Á¸
-		MOV		[ECX+36], SS		; ¾îÇÃ¸®ÄÉÀÌ¼ÇÀÇ SS¸¦ º¸Á¸
+		MOV		[ECX+32], ESP		; ì–´í”Œë¦¬ì¼€ì´ì…˜ì˜ ESPë¥¼ ë³´ì¡´
+		MOV		[ECX+36], SS		; ì–´í”Œë¦¬ì¼€ì´ì…˜ì˜ SSë¥¼ ë³´ì¡´
 
-; PUSHAD ÇÑ °ªÀ» ½Ã½ºÅÛÀÇ ½ºÅÃ¿¡ Ä«ÇÇÇÑ´Ù
+; PUSHAD í•œ ê°’ì„ ì‹œìŠ¤í…œì˜ ìŠ¤íƒì— ì¹´í”¼í•œë‹¤
 		MOV		EDX,[ESP   ]
 		MOV		EBX,[ESP+ 4]
-		MOV		[ECX   ], EDX	; hrb_api¿¡ °Ç³×ÁÖ±â À§ÇØ Ä«ÇÇ
-		MOV		[ECX+ 4], EBX	; hrb_api¿¡ °Ç³×ÁÖ±â À§ÇØ Ä«ÇÇ
+		MOV		[ECX   ], EDX	; hrb_apiì— ê±´ë„¤ì£¼ê¸° ìœ„í•´ ì¹´í”¼
+		MOV		[ECX+ 4], EBX	; hrb_apiì— ê±´ë„¤ì£¼ê¸° ìœ„í•´ ì¹´í”¼
 		MOV		EDX,[ESP+ 8]
 		MOV		EBX,[ESP+12]
-		MOV		[ECX+ 8], EDX	; hrb_api¿¡ °Ç³×ÁÖ±â À§ÇØ Ä«ÇÇ
-		MOV		[ECX+12], EBX	; hrb_api¿¡ °Ç³×ÁÖ±â À§ÇØ Ä«ÇÇ
+		MOV		[ECX+ 8], EDX	; hrb_apiì— ê±´ë„¤ì£¼ê¸° ìœ„í•´ ì¹´í”¼
+		MOV		[ECX+12], EBX	; hrb_apiì— ê±´ë„¤ì£¼ê¸° ìœ„í•´ ì¹´í”¼
 		MOV		EDX,[ESP+16]
 		MOV		EBX,[ESP+20]
-		MOV		[ECX+16], EDX	; hrb_api¿¡ °Ç³×ÁÖ±â À§ÇØ Ä«ÇÇ
-		MOV		[ECX+20], EBX	; hrb_api¿¡ °Ç³×ÁÖ±â À§ÇØ Ä«ÇÇ
+		MOV		[ECX+16], EDX	; hrb_apiì— ê±´ë„¤ì£¼ê¸° ìœ„í•´ ì¹´í”¼
+		MOV		[ECX+20], EBX	; hrb_apiì— ê±´ë„¤ì£¼ê¸° ìœ„í•´ ì¹´í”¼
 		MOV		EDX,[ESP+24]
 		MOV		EBX,[ESP+28]
-		MOV		[ECX+24], EDX	; hrb_api¿¡ °Ç³×ÁÖ±â À§ÇØ Ä«ÇÇ
-		MOV		[ECX+28], EBX	; hrb_api¿¡ °Ç³×ÁÖ±â À§ÇØ Ä«ÇÇ
+		MOV		[ECX+24], EDX	; hrb_apiì— ê±´ë„¤ì£¼ê¸° ìœ„í•´ ì¹´í”¼
+		MOV		[ECX+28], EBX	; hrb_apiì— ê±´ë„¤ì£¼ê¸° ìœ„í•´ ì¹´í”¼
 
-		MOV		ES, AX		; ³ª¸ÓÁö ¼¼±×¸ÕÆ®(segment) ·¹Áö½ºÅÍµµ OS¿ëÀ¸·Î ÇÑ´Ù
+		MOV		ES, AX		; ë‚˜ë¨¸ì§€ ì„¸ê·¸ë¨¼íŠ¸(segment) ë ˆì§€ìŠ¤í„°ë„ OSìš©ìœ¼ë¡œ í•œë‹¤
 		MOV		SS,AX
 		MOV		ESP,ECX
-		STI			; °Ü¿ì ÀÎÅÍ·´Æ® Çã°¡
+		STI			; ê²¨ìš° ì¸í„°ëŸ½íŠ¸ í—ˆê°€
 
 		CALL	_hrb_api
 
-		MOV		ECX,[ESP+32]	; ¾îÇÃ¸®ÄÉÀÌ¼ÇÀÇ ESP
-		MOV		EAX,[ESP+36]	; ¾îÇÃ¸®ÄÉÀÌ¼ÇÀÇ SS
+		MOV		ECX,[ESP+32]	; ì–´í”Œë¦¬ì¼€ì´ì…˜ì˜ ESP
+		MOV		EAX,[ESP+36]	; ì–´í”Œë¦¬ì¼€ì´ì…˜ì˜ SS
 		CLI
 		MOV		SS,AX
 		MOV		ESP,ECX
 		POPAD
 		POP		ES
 		POP		DS
-		IRETD		; ÀÌ ¸í·ÉÀÌ ÀÚµ¿À¸·Î STI ÇØ ÁØ´Ù
+		IRETD		; ì´ ëª…ë ¹ì´ ìžë™ìœ¼ë¡œ STI í•´ ì¤€ë‹¤
 
 _start_app:		; void start_app(int eip, int cs, int esp, int ds);
-		PUSHAD		; 32ºñÆ® ·¹Áö½ºÅÍ¸¦ ÀüºÎ º¸Á¸ÇØ µÐ´Ù
-		MOV		EAX,[ESP+36]	; ¾îÇÃ¸®ÄÉÀÌ¼Ç¿ëÀÇ EIP
-		MOV		ECX,[ESP+40]	; ¾îÇÃ¸®ÄÉÀÌ¼Ç¿ëÀÇ CS
-		MOV		EDX,[ESP+44]	; ¾îÇÃ¸®ÄÉÀÌ¼Ç¿ëÀÇ ESP
-		MOV		EBX,[ESP+48]	; ¾îÇÃ¸®ÄÉÀÌ¼Ç¿ëÀÇ DS/SS
-		MOV		[0xfe4], ESP		; OS¿ëÀÇ ESP
-		CLI			; º¯È¯Áß¿¡ ÀÎÅÍ·´Æ®°¡ ÀÏ¾î³ª±â¸¦ ¿øÇÏÁö ¾Ê±â ¶§¹®¿¡ ±ÝÁö
+		PUSHAD		; 32ë¹„íŠ¸ ë ˆì§€ìŠ¤í„°ë¥¼ ì „ë¶€ ë³´ì¡´í•´ ë‘”ë‹¤
+		MOV		EAX,[ESP+36]	; ì–´í”Œë¦¬ì¼€ì´ì…˜ìš©ì˜ EIP
+		MOV		ECX,[ESP+40]	; ì–´í”Œë¦¬ì¼€ì´ì…˜ìš©ì˜ CS
+		MOV		EDX,[ESP+44]	; ì–´í”Œë¦¬ì¼€ì´ì…˜ìš©ì˜ ESP
+		MOV		EBX,[ESP+48]	; ì–´í”Œë¦¬ì¼€ì´ì…˜ìš©ì˜ DS/SS
+		MOV		[0xfe4], ESP		; OSìš©ì˜ ESP
+		CLI			; ë³€í™˜ì¤‘ì— ì¸í„°ëŸ½íŠ¸ê°€ ì¼ì–´ë‚˜ê¸°ë¥¼ ì›í•˜ì§€ ì•Šê¸° ë•Œë¬¸ì— ê¸ˆì§€
 		MOV		ES,BX
 		MOV		SS,BX
 		MOV		DS,BX
 		MOV		FS,BX
 		MOV		GS,BX
 		MOV		ESP,EDX
-		STI					; º¯È¯ ¿Ï·áÀÌ¹Ç·Î ÀÎÅÍ·´Æ® °¡´ÉÀ¸·Î µÇµ¹¸°´Ù
-		PUSH	ECX				; far-CALL¸¦ À§ÇØ¼­ PUSH(cs)
-		PUSH	EAX				; far-CALL¸¦ À§ÇØ¼­ PUSH(eip)
-		CALL	FAR [ESP]			; ¾îÇÃ¸®ÄÉÀÌ¼ÇÀ» È£ÃâÇÑ´Ù
+		STI					; ë³€í™˜ ì™„ë£Œì´ë¯€ë¡œ ì¸í„°ëŸ½íŠ¸ ê°€ëŠ¥ìœ¼ë¡œ ë˜ëŒë¦°ë‹¤
+		PUSH	ECX				; far-CALLë¥¼ ìœ„í•´ì„œ PUSH(cs)
+		PUSH	EAX				; far-CALLë¥¼ ìœ„í•´ì„œ PUSH(eip)
+		CALL	FAR [ESP]			; ì–´í”Œë¦¬ì¼€ì´ì…˜ì„ í˜¸ì¶œí•œë‹¤
 
-;	¾îÇÃ¸®ÄÉÀÌ¼ÇÀÌ Á¾·áÇÏ´Â °÷À¸·Î µ¹¾Æ¿Â´Ù
+;	ì–´í”Œë¦¬ì¼€ì´ì…˜ì´ ì¢…ë£Œí•˜ëŠ” ê³³ìœ¼ë¡œ ëŒì•„ì˜¨ë‹¤
 
-		MOV		EAX,1*8			; OS¿ëÀÇ DS/SS
-		CLI					; ¶Ç ¹Ù²Ù¹Ç·Î ÀÎÅÍ·´Æ® ±ÝÁö
+		MOV		EAX,1*8			; OSìš©ì˜ DS/SS
+		CLI					; ë˜ ë°”ê¾¸ë¯€ë¡œ ì¸í„°ëŸ½íŠ¸ ê¸ˆì§€
 		MOV		ES,AX
 		MOV		SS,AX
 		MOV		DS,AX
 		MOV		FS,AX
 		MOV		GS,AX
 		MOV		ESP,[0xfe4]
-		STI			; º¯È¯ ¿Ï·áÀÌ¹Ç·Î ÀÎÅÍ·´Æ® °¡´ÉÀ¸·Î µÇµ¹¸°´Ù
-		POPAD			; º¸Á¸ÇØ µÐ ·¹Áö½ºÅÍ¸¦ È¸º¹
+		STI			; ë³€í™˜ ì™„ë£Œì´ë¯€ë¡œ ì¸í„°ëŸ½íŠ¸ ê°€ëŠ¥ìœ¼ë¡œ ë˜ëŒë¦°ë‹¤
+		POPAD			; ë³´ì¡´í•´ ë‘” ë ˆì§€ìŠ¤í„°ë¥¼ íšŒë³µ
 		RET

@@ -10,4 +10,4 @@
 __alloca:
 		ADD		EAX,-4
 		SUB		ESP,EAX
-		JMP		DWORD [ESP+EAX]		; RET ´ë½Å
+		JMP		DWORD [ESP+EAX]		; RET ëŒ€ì‹ 

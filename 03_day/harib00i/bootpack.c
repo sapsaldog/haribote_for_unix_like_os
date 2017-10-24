@@ -2,7 +2,7 @@ void HariMain(void)
 {
 
 fin:
-	/* ¿©±â¿¡ HLT¸¦ ³Ö°í ½ÍÁö¸¸, C¾ð¾î¿¡¼­´Â HLT¸¦ »ç¿ëÇÒ ¼ö ¾ø´Ù!  */
+	/* ì—¬ê¸°ì— HLTë¥¼ ë„£ê³  ì‹¶ì§€ë§Œ, Cì–¸ì–´ì—ì„œëŠ” HLTë¥¼ ì‚¬ìš©í•  ìˆ˜ ì—†ë‹¤!  */
 	goto fin;
 
 }

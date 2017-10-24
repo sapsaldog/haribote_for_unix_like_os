@@ -20,13 +20,13 @@ GOLIB    = $(TOOLPATH)golib00.exe
 COPY     = copy
 DEL      = del
 
-# µğÆúÆ® µ¿ÀÛ
+# ë””í´íŠ¸ ë™ì‘
 
 default :
 	$(MAKE) ipl09.bin
 	$(MAKE) haribote.sys
 
-# ÆÄÀÏ »ı¼º ±ÔÄ¢
+# íŒŒì¼ ìƒì„± ê·œì¹™
 
 ipl09.bin : ipl09.nas Makefile
 	$(NASK) ipl09.nas ipl09.bin ipl09.lst
@@ -51,7 +51,7 @@ bootpack.hrb : bootpack.bim Makefile
 haribote.sys : asmhead.bin bootpack.hrb Makefile
 	copy /B asmhead.bin+bootpack.hrb haribote.sys
 
-# ÀÏ¹İ ±ÔÄ¢
+# ì¼ë°˜ ê·œì¹™
 
 %.gas : %.c bootpack.h Makefile
 	$(CC1) -o $*.gas $*.c
@@ -62,7 +62,7 @@ haribote.sys : asmhead.bin bootpack.hrb Makefile
 %.obj : %.nas Makefile
 	$(NASK) $*.nas $*.obj $*.lst
 
-# Ä¿¸Çµå
+# ì»¤ë§¨ë“œ
 
 clean :
 	-$(DEL) asmhead.bin

@@ -1,26 +1,26 @@
-/* ÀÎÅÍ·´Æ® °ü°è */
+/* ì¸í„°ëŸ½íŠ¸ ê´€ê³„ */
 
 #include "bootpack.h"
 #include <stdio.h>
 
 void init_pic(void)
-/* PICÀÇ ÃÊ±âÈ­ */
+/* PICì˜ ì´ˆê¸°í™” */
 {
-	io_out8(PIC0_IMR,  0xff  ); /* ¸ðµç ÀÎÅÍ·´Æ®¸¦ ¹Þ¾ÆµéÀÌÁö ¾Ê´Â´Ù */
-	io_out8(PIC1_IMR,  0xff  ); /* ¸ðµç ÀÎÅÍ·´Æ®¸¦ ¹Þ¾ÆµéÀÌÁö ¾Ê´Â´Ù */
+	io_out8(PIC0_IMR,  0xff  ); /* ëª¨ë“  ì¸í„°ëŸ½íŠ¸ë¥¼ ë°›ì•„ë“¤ì´ì§€ ì•ŠëŠ”ë‹¤ */
+	io_out8(PIC1_IMR,  0xff  ); /* ëª¨ë“  ì¸í„°ëŸ½íŠ¸ë¥¼ ë°›ì•„ë“¤ì´ì§€ ì•ŠëŠ”ë‹¤ */
 
-	io_out8(PIC0_ICW1, 0x11  ); /* edge trigger ¸ðµå */
-	io_out8(PIC0_ICW2, 0x20  ); /* IRQ0-7Àº, INT20-27À¸·Î ¹Þ´Â´Ù */
-	io_out8(PIC0_ICW3, 1 << 2); /* PIC1´Â IRQ2¿¡¼­ Á¢¼Ó */
-	io_out8(PIC0_ICW4, 0x01  ); /* non buffer¸ðµå */
+	io_out8(PIC0_ICW1, 0x11  ); /* edge trigger ëª¨ë“œ */
+	io_out8(PIC0_ICW2, 0x20  ); /* IRQ0-7ì€, INT20-27ìœ¼ë¡œ ë°›ëŠ”ë‹¤ */
+	io_out8(PIC0_ICW3, 1 << 2); /* PIC1ëŠ” IRQ2ì—ì„œ ì ‘ì† */
+	io_out8(PIC0_ICW4, 0x01  ); /* non bufferëª¨ë“œ */
 
-	io_out8(PIC1_ICW1, 0x11  ); /* edge trigger ¸ðµå */
-	io_out8(PIC1_ICW2, 0x28  ); /* IRQ8-15´Â, INT28-2 f·Î ¹Þ´Â´Ù */
-	io_out8(PIC1_ICW3, 2     ); /* PIC1´Â IRQ2¿¡¼­ Á¢¼Ó */
-	io_out8(PIC1_ICW4, 0x01  ); /* non buffer¸ðµå */
+	io_out8(PIC1_ICW1, 0x11  ); /* edge trigger ëª¨ë“œ */
+	io_out8(PIC1_ICW2, 0x28  ); /* IRQ8-15ëŠ”, INT28-2 fë¡œ ë°›ëŠ”ë‹¤ */
+	io_out8(PIC1_ICW3, 2     ); /* PIC1ëŠ” IRQ2ì—ì„œ ì ‘ì† */
+	io_out8(PIC1_ICW4, 0x01  ); /* non bufferëª¨ë“œ */
 
-	io_out8(PIC0_IMR,  0xfb  ); /* 11111011 PIC1 ÀÌ¿Ü´Â ¸ðµÎ ±ÝÁö */
-	io_out8(PIC1_IMR,  0xff  ); /* 11111111 ¸ðµç ÀÎÅÍ·´Æ®¸¦ ¹Þ¾ÆµéÀÌÁö ¾Ê´Â´Ù */
+	io_out8(PIC0_IMR,  0xfb  ); /* 11111011 PIC1 ì´ì™¸ëŠ” ëª¨ë‘ ê¸ˆì§€ */
+	io_out8(PIC1_IMR,  0xff  ); /* 11111111 ëª¨ë“  ì¸í„°ëŸ½íŠ¸ë¥¼ ë°›ì•„ë“¤ì´ì§€ ì•ŠëŠ”ë‹¤ */
 
 	return;
 }
@@ -32,7 +32,7 @@ struct FIFO8 keyfifo;
 void inthandler21(int *esp)
 {
 	unsigned char data;
-	io_out8(PIC0_OCW2, 0x61);	/* IRQ-01 Á¢¼ö ¿Ï·á¸¦ PIC¿¡ ÅëÁö */
+	io_out8(PIC0_OCW2, 0x61);	/* IRQ-01 ì ‘ìˆ˜ ì™„ë£Œë¥¼ PICì— í†µì§€ */
 	data = io_in8(PORT_KEYDAT);
 	fifo8_put(&keyfifo, data);
 	return;
@@ -41,11 +41,11 @@ void inthandler21(int *esp)
 struct FIFO8 mousefifo;
 
 void inthandler2c(int *esp)
-/* PS/2 ¸¶¿ì½º·ÎºÎÅÍÀÇ ÀÎÅÍ·´Æ® */
+/* PS/2 ë§ˆìš°ìŠ¤ë¡œë¶€í„°ì˜ ì¸í„°ëŸ½íŠ¸ */
 {
 	unsigned char data;
-	io_out8(PIC1_OCW2, 0x64);	/* IRQ-12 Á¢¼ö ¿Ï·á¸¦ PIC1¿¡ ÅëÁö */
-	io_out8(PIC0_OCW2, 0x62);	/* IRQ-02 Á¢¼ö ¿Ï·á¸¦ PIC0¿¡ ÅëÁö */
+	io_out8(PIC1_OCW2, 0x64);	/* IRQ-12 ì ‘ìˆ˜ ì™„ë£Œë¥¼ PIC1ì— í†µì§€ */
+	io_out8(PIC0_OCW2, 0x62);	/* IRQ-02 ì ‘ìˆ˜ ì™„ë£Œë¥¼ PIC0ì— í†µì§€ */
 	data = io_in8(PORT_KEYDAT);
 	fifo8_put(&mousefifo, data);
 	return;

@@ -7,12 +7,12 @@ IMGTOL   = $(TOOLPATH)imgtol.com
 COPY     = copy
 DEL      = del
 
-# µğÆúÆ® µ¿ÀÛ
+# ë””í´íŠ¸ ë™ì‘
 
 default :
 	$(MAKE) haribote.img
 
-# ÆÄÀÏ »ı¼º ±ÔÄ¢
+# íŒŒì¼ ìƒì„± ê·œì¹™
 
 haribote.img : haribote/ipl20.bin haribote/haribote.sys Makefile \
 		a/a.hrb hello3/hello3.hrb hello4/hello4.hrb hello5/hello5.hrb \
@@ -64,7 +64,7 @@ haribote.img : haribote/ipl20.bin haribote/haribote.sys Makefile \
 		copy from:nihongo/nihongo.fnt to:@: \
 		imgout:haribote.img
 
-# Ä¿¸Çµå
+# ì»¤ë§¨ë“œ
 
 run :
 	$(MAKE) haribote.img
@@ -122,7 +122,7 @@ run_os :
 	$(MAKE) run
 
 clean :
-# ¾Æ¹«°Íµµ ÇÏÁö ¾Ê´Â´Ù
+# ì•„ë¬´ê²ƒë„ í•˜ì§€ ì•ŠëŠ”ë‹¤
 
 src_only :
 	$(MAKE) clean

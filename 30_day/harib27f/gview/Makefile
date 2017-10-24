@@ -23,12 +23,12 @@ GOLIB    = $(TOOLPATH)golib00.exe
 COPY     = copy
 DEL      = del
 
-# µğÆúÆ® µ¿ÀÛ
+# ë””í´íŠ¸ ë™ì‘
 
 default :
 	$(MAKE) $(APP).hrb
 
-# ÆÄÀÏ »ı¼º ±ÔÄ¢
+# íŒŒì¼ ìƒì„± ê·œì¹™
 
 $(APP).bim : $(APP).obj bmp.obj jpeg.obj $(APILIBPATH)apilib.lib Makefile
 	$(OBJ2BIM) @$(RULEFILE) out:$(APP).bim map:$(APP).map stack:$(STACK) \
@@ -43,7 +43,7 @@ haribote.img : ../haribote/ipl20.bin ../haribote/haribote.sys $(APP).hrb \
 		copy from:../nihongo/nihongo.fnt to:@: \
 		imgout:haribote.img
 
-# ÀÏ¹İ ±ÔÄ¢
+# ì¼ë°˜ ê·œì¹™
 
 %.gas : %.c ../apilib.h Makefile
 	$(CC1) -o $*.gas $*.c
@@ -60,7 +60,7 @@ haribote.img : ../haribote/ipl20.bin ../haribote/haribote.sys $(APP).hrb \
 %.hrb : %.org Makefile
 	$(BIM2BIN) -osacmp in:$*.org out:$*.hrb
 
-# Ä¿¸Çµå
+# ì»¤ë§¨ë“œ
 
 run :
 	$(MAKE) haribote.img

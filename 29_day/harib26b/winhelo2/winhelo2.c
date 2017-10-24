@@ -5,11 +5,11 @@ void HariMain(void)
 	int win;
 	char buf[150 * 50];
 	win = api_openwin(buf, 150, 50, -1, "hello");
-	api_boxfilwin(win,  8, 36, 141, 43, 3 /* ³ë¶û */);
-	api_putstrwin(win, 28, 28, 0 /* °ËÁ¤ */, 12, "hello, world");
+	api_boxfilwin(win,  8, 36, 141, 43, 3 /* ë…¸ë‘ */);
+	api_putstrwin(win, 28, 28, 0 /* ê²€ì • */, 12, "hello, world");
 	for (;;) {
 		if (api_getkey(1) == 0x0a) {
-			break; /* Enter¶ó¸é break; */
+			break; /* Enterë¼ë©´ break; */
 		}
 	}
 	api_end();

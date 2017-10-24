@@ -1,4 +1,4 @@
-/* bootpackÀÇ ¸ŞÀÎ */
+/* bootpackì˜ ë©”ì¸ */
 
 #include "bootpack.h"
 #include <stdio.h>
@@ -13,15 +13,15 @@ void HariMain(void)
 
 	init_gdtidt();
 	init_pic();
-	io_sti(); /* IDT/PICÀÇ ÃÊ±âÈ­°¡ ³¡³µÀ¸¹Ç·Î CPUÀÇ ÀÎÅÍ·´Æ® ±İÁö¸¦ ÇØÁ¦ */
+	io_sti(); /* IDT/PICì˜ ì´ˆê¸°í™”ê°€ ëë‚¬ìœ¼ë¯€ë¡œ CPUì˜ ì¸í„°ëŸ½íŠ¸ ê¸ˆì§€ë¥¼ í•´ì œ */
 
 	fifo8_init(&keyfifo, 32, keybuf);
-	io_out8(PIC0_IMR, 0xf9); /* PIC1¿Í Å°º¸µå¸¦ Çã°¡(11111001) */
-	io_out8(PIC1_IMR, 0xef); /* ¸¶¿ì½º¸¦ Çã°¡(11101111) */
+	io_out8(PIC0_IMR, 0xf9); /* PIC1ì™€ í‚¤ë³´ë“œë¥¼ í—ˆê°€(11111001) */
+	io_out8(PIC1_IMR, 0xef); /* ë§ˆìš°ìŠ¤ë¥¼ í—ˆê°€(11101111) */
 
 	init_palette();
 	init_screen8(binfo->vram, binfo->scrnx, binfo->scrny);
-	mx = (binfo->scrnx - 16) / 2; /* È­¸é Áß¾ÓÀÌ µÇµµ·Ï ÁÂÇ¥ °è»ê */
+	mx = (binfo->scrnx - 16) / 2; /* í™”ë©´ ì¤‘ì•™ì´ ë˜ë„ë¡ ì¢Œí‘œ ê³„ì‚° */
 	my = (binfo->scrny - 28 - 16) / 2;
 	init_mouse_cursor8(mcursor, COL8_008484);
 	putblock8_8(binfo->vram, binfo->scrnx, 16, 16, mx, my, mcursor, 16);

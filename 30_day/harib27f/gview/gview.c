@@ -27,12 +27,12 @@ void HariMain(void)
 	int win, i, j, fsize, xsize, info[8];
 	struct RGB picbuf[1024 * 768], *q;
 
-	/* Ä¿¸Çµå ¶óÀÎ ÇØ¼® */
+	/* ì»¤ë§¨ë“œ ë¼ì¸ í•´ì„ */
 	api_cmdline(s, 30);
-	for (p = s; *p > ' '; p++) { }	/* ½ºÆäÀÌ½º°¡ ¿Ã ¶§±îÁö °Ç³Ê ¶Ú´Ù */
-	for (; *p == ' '; p++) { }	/* ½ºÆäÀÌ½º¸¦ °Ç³Ê ¶Ú´Ù */
+	for (p = s; *p > ' '; p++) { }	/* ìŠ¤í˜ì´ìŠ¤ê°€ ì˜¬ ë•Œê¹Œì§€ ê±´ë„ˆ ë›´ë‹¤ */
+	for (; *p == ' '; p++) { }	/* ìŠ¤í˜ì´ìŠ¤ë¥¼ ê±´ë„ˆ ë›´ë‹¤ */
 
-	/* ÆÄÀÏ read */
+	/* íŒŒì¼ read */
 	i = api_fopen(p); if (i == 0) { error("file not found.\n"); }
 	fsize = api_fsize(i, 0);
 	if (fsize > 512 * 1024) {
@@ -41,18 +41,18 @@ void HariMain(void)
 	api_fread(filebuf, fsize, i);
 	api_fclose(i);
 
-	/* ÆÄÀÏ Å¸ÀÔ Ã¼Å© */
+	/* íŒŒì¼ íƒ€ì… ì²´í¬ */
 	if (info_BMP(&env, info, fsize, filebuf) == 0) {
-		/* BMP´Â ¾Æ´Ï¾ú´Ù */
+		/* BMPëŠ” ì•„ë‹ˆì—ˆë‹¤ */
 		if (info_JPEG(&env, info, fsize, filebuf) == 0) {
-			/* JPEGµµ ¾Æ´Ï¾ú´Ù */
+			/* JPEGë„ ì•„ë‹ˆì—ˆë‹¤ */
 			api_putstr0("file type unknown.\n");
 			api_end();
 		}
 	}
-	/* ¾î´À ÂÊÀÎ°¡ÀÇ info ÇÔ¼ö°¡ ¼º°øÇÏ¸é, ÀÌÇÏÀÇ Á¤º¸°¡ info¿¡ µé¾î°¡ ÀÖ´Ù */
-	/*	info[0] : ÆÄÀÏ Å¸ÀÔ (1:BMP, 2:JPEG) */
-	/*	info[1] : Ä®¶ó Á¤º¸ */
+	/* ì–´ëŠ ìª½ì¸ê°€ì˜ info í•¨ìˆ˜ê°€ ì„±ê³µí•˜ë©´, ì´í•˜ì˜ ì •ë³´ê°€ infoì— ë“¤ì–´ê°€ ìˆë‹¤ */
+	/*	info[0] : íŒŒì¼ íƒ€ì… (1:BMP, 2:JPEG) */
+	/*	info[1] : ì¹¼ë¼ ì •ë³´ */
 	/*	info[2] : xsize */
 	/*	info[3] : ysize */
 
@@ -60,26 +60,26 @@ void HariMain(void)
 		error("picture too large.\n");
 	}
 
-	/* À©µµ¿ìÀÇ ÁØºñ */
+	/* ìœˆë„ìš°ì˜ ì¤€ë¹„ */
 	xsize = info[2] + 16;
 	if (xsize < 136) {
 		xsize = 136;
 	}
 	win = api_openwin(winbuf, xsize, info[3] + 37, -1, "gview");
 
-	/* ÆÄÀÏ ³»¿ëÀ» È­»ó µ¥ÀÌÅÍ·Î º¯È¯ */
+	/* íŒŒì¼ ë‚´ìš©ì„ í™”ìƒ ë°ì´í„°ë¡œ ë³€í™˜ */
 	if (info[0] == 1) {
 		i = decode0_BMP (&env, fsize, filebuf, 4, (char *) picbuf, 0);
 	} else {
 		i = decode0_JPEG(&env, fsize, filebuf, 4, (char *) picbuf, 0);
 	}
-	/* b_type = 4´Â struct RGB Çü½ÄÀ» ÀÇ¹ÌÇÑ´Ù */
-	/* skipÀº 0À¸·Î ÇØ µÎ¸é ÁÁ´Ù */
+	/* b_type = 4ëŠ” struct RGB í˜•ì‹ì„ ì˜ë¯¸í•œë‹¤ */
+	/* skipì€ 0ìœ¼ë¡œ í•´ ë‘ë©´ ì¢‹ë‹¤ */
 	if (i != 0) {
 		error("decode error.\n");
 	}
 
-	/* Ç¥½Ã */
+	/* í‘œì‹œ */
 	for (i = 0; i < info[3]; i++) {
 		p = winbuf + (i + 29) * xsize + (xsize - info[2]) / 2;
 		q = picbuf + i * info[2];
@@ -89,7 +89,7 @@ void HariMain(void)
 	}
 	api_refreshwin(win, (xsize - info[2]) / 2, 29, (xsize - info[2]) / 2 + info[2], 29 + info[3]);
 
-	/* Á¾·á ´ë±â */
+	/* ì¢…ë£Œ ëŒ€ê¸° */
 	for (;;) {
 		i = api_getkey(1);
 		if (i == 'Q' || i == 'q') {
@@ -102,13 +102,13 @@ unsigned char rgb2pal(int r, int g, int b, int x, int y)
 {
 	static int table[4] = { 3, 1, 0, 2 };
 	int i;
-	x &= 1; /* Â¦¼öÀÎ°¡ È¦¼öÀÎ°¡ */
+	x &= 1; /* ì§ìˆ˜ì¸ê°€ í™€ìˆ˜ì¸ê°€ */
 	y &= 1;
-	i = table[x + y * 2];	/* Áß°£»öÀ» ¸¸µé±â À§ÇÑ Á¤¼ö */
-	r = (r * 21) / 256;	/* ÀÌ°ÍÀ¸·Î 0~20 ÀÌ µÈ´Ù */
+	i = table[x + y * 2];	/* ì¤‘ê°„ìƒ‰ì„ ë§Œë“¤ê¸° ìœ„í•œ ì •ìˆ˜ */
+	r = (r * 21) / 256;	/* ì´ê²ƒìœ¼ë¡œ 0~20 ì´ ëœë‹¤ */
 	g = (g * 21) / 256;
 	b = (b * 21) / 256;
-	r = (r + i) / 4;	/* ÀÌ°ÍÀ¸·Î 0~5 °¡ µÈ´Ù */
+	r = (r + i) / 4;	/* ì´ê²ƒìœ¼ë¡œ 0~5 ê°€ ëœë‹¤ */
 	g = (g + i) / 4;
 	b = (b + i) / 4;
 	return 16 + r + g * 6 + b * 36;

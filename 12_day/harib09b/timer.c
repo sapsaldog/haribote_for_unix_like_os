@@ -1,4 +1,4 @@
-/* Å¸ÀÌ¸Ó °ü°è */
+/* íƒ€ì´ë¨¸ ê´€ê³„ */
 
 #include "bootpack.h"
 
@@ -18,7 +18,7 @@ void init_pit(void)
 
 void inthandler20(int *esp)
 {
-	io_out8(PIC0_OCW2, 0x60);	/* IRQ-00 Á¢¼ö ¿Ï·á¸¦ PIC¿¡ ÅëÁö */
+	io_out8(PIC0_OCW2, 0x60);	/* IRQ-00 ì ‘ìˆ˜ ì™„ë£Œë¥¼ PICì— í†µì§€ */
 	timerctl.count++;
 	return;
 }

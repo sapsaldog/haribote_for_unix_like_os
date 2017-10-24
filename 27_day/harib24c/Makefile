@@ -19,12 +19,12 @@ IMGTOL   = $(TOOLPATH)imgtol.com
 COPY     = copy
 DEL      = del
 
-# µğÆúÆ® µ¿ÀÛ
+# ë””í´íŠ¸ ë™ì‘
 
 default :
 	$(MAKE) img
 
-# ÆÄÀÏ »ı¼º ±ÔÄ¢
+# íŒŒì¼ ìƒì„± ê·œì¹™
 
 ipl10.bin : ipl10.nas Makefile
 	$(NASK) ipl10.nas ipl10.bin ipl10.lst
@@ -201,7 +201,7 @@ haribote.img : ipl10.bin haribote.sys Makefile \
 		copy from:crack7.hrb to:@: \
 		imgout:haribote.img
 
-# ÀÏ¹İ ±ÔÄ¢
+# ì¼ë°˜ ê·œì¹™
 
 %.gas : %.c bootpack.h Makefile
 	$(CC1) -o $*.gas $*.c
@@ -212,7 +212,7 @@ haribote.img : ipl10.bin haribote.sys Makefile \
 %.obj : %.nas Makefile
 	$(NASK) $*.nas $*.obj $*.lst
 
-# Ä¿¸Çµå
+# ì»¤ë§¨ë“œ
 
 img :
 	$(MAKE) haribote.img

@@ -1,4 +1,4 @@
-/* bootpackÀÇ ¸ŞÀÎ */
+/* bootpackì˜ ë©”ì¸ */
 
 #include "bootpack.h"
 #include <stdio.h>
@@ -24,13 +24,13 @@ void HariMain(void)
 
 	init_gdtidt();
 	init_pic();
-	io_sti(); /* IDT/PICÀÇ ÃÊ±âÈ­°¡ ³¡³µÀ¸¹Ç·Î CPUÀÇ ÀÎÅÍ·´Æ® ±İÁö¸¦ ÇØÁ¦ */
+	io_sti(); /* IDT/PICì˜ ì´ˆê¸°í™”ê°€ ëë‚¬ìœ¼ë¯€ë¡œ CPUì˜ ì¸í„°ëŸ½íŠ¸ ê¸ˆì§€ë¥¼ í•´ì œ */
 	fifo32_init(&fifo, 128, fifobuf);
 	init_pit();
 	init_keyboard(&fifo, 256);
 	enable_mouse(&fifo, 512, &mdec);
-	io_out8(PIC0_IMR, 0xf8); /* PIT¿Í PIC1¿Í Å°º¸µå¸¦ Çã°¡(11111000) */
-	io_out8(PIC1_IMR, 0xef); /* ¸¶¿ì½º¸¦ Çã°¡(11101111) */
+	io_out8(PIC0_IMR, 0xf8); /* PITì™€ PIC1ì™€ í‚¤ë³´ë“œë¥¼ í—ˆê°€(11111000) */
+	io_out8(PIC1_IMR, 0xef); /* ë§ˆìš°ìŠ¤ë¥¼ í—ˆê°€(11101111) */
 
 	set490(&fifo, 1);
 	timer = timer_alloc();
@@ -55,14 +55,14 @@ void HariMain(void)
 	sht_win   = sheet_alloc(shtctl);
 	buf_back  = (unsigned char *) memman_alloc_4k(memman, binfo->scrnx * binfo->scrny);
 	buf_win   = (unsigned char *) memman_alloc_4k(memman, 160 * 52);
-	sheet_setbuf(sht_back, buf_back, binfo->scrnx, binfo->scrny, -1); /* Åõ¸í»ö¾øÀ½ */
+	sheet_setbuf(sht_back, buf_back, binfo->scrnx, binfo->scrny, -1); /* íˆ¬ëª…ìƒ‰ì—†ìŒ */
 	sheet_setbuf(sht_mouse, buf_mouse, 16, 16, 99);
-	sheet_setbuf(sht_win, buf_win, 160, 52, -1); /* Åõ¸í»ö¾øÀ½ */
+	sheet_setbuf(sht_win, buf_win, 160, 52, -1); /* íˆ¬ëª…ìƒ‰ì—†ìŒ */
 	init_screen8(buf_back, binfo->scrnx, binfo->scrny);
 	init_mouse_cursor8(buf_mouse, 99);
 	make_window8(buf_win, 160, 52, "counter");
 	sheet_slide(sht_back, 0, 0);
-	mx = (binfo->scrnx - 16) / 2; /* È­¸é Áß¾ÓÀÌ µÇµµ·Ï ÁÂÇ¥ °è»ê */
+	mx = (binfo->scrnx - 16) / 2; /* í™”ë©´ ì¤‘ì•™ì´ ë˜ë„ë¡ ì¢Œí‘œ ê³„ì‚° */
 	my = (binfo->scrny - 28 - 16) / 2;
 	sheet_slide(sht_mouse, mx, my);
 	sheet_slide(sht_win, 80, 72);
@@ -84,12 +84,12 @@ void HariMain(void)
 		} else {
 			i = fifo32_get(&fifo);
 			io_sti();
-			if (256 <= i && i <= 511) { /* Å°º¸µå µ¥ÀÌÅÍ */
+			if (256 <= i && i <= 511) { /* í‚¤ë³´ë“œ ë°ì´í„° */
 				sprintf(s, "%02X", i - 256);
 				putfonts8_asc_sht(sht_back, 0, 16, COL8_FFFFFF, COL8_008484, s, 2);
-			} else if (512 <= i && i <= 767) { /* ¸¶¿ì½º µ¥ÀÌÅÍ */
+			} else if (512 <= i && i <= 767) { /* ë§ˆìš°ìŠ¤ ë°ì´í„° */
 				if (mouse_decode(&mdec, i - 512) != 0) {
-					/* µ¥ÀÌÅÍ°¡ 3¹ÙÀÌÆ® ¸ğ¿´À¸¹Ç·Î Ç¥½Ã */
+					/* ë°ì´í„°ê°€ 3ë°”ì´íŠ¸ ëª¨ì˜€ìœ¼ë¯€ë¡œ í‘œì‹œ */
 					sprintf(s, "[lcr %4d %4d]", mdec.x, mdec.y);
 					if ((mdec.btn & 0x01) != 0) {
 						s[1] = 'L';
@@ -101,7 +101,7 @@ void HariMain(void)
 						s[2] = 'C';
 					}
 					putfonts8_asc_sht(sht_back, 32, 16, COL8_FFFFFF, COL8_008484, s, 15);
-					/* ¸¶¿ì½º Ä¿¼­ÀÇ ÀÌµ¿ */
+					/* ë§ˆìš°ìŠ¤ ì»¤ì„œì˜ ì´ë™ */
 					mx += mdec.x;
 					my += mdec.y;
 					if (mx < 0) {
@@ -120,20 +120,20 @@ void HariMain(void)
 					putfonts8_asc_sht(sht_back, 0, 0, COL8_FFFFFF, COL8_008484, s, 10);
 					sheet_slide(sht_mouse, mx, my);
 				}
-			} else if (i == 10) { /* 10ÃÊ Å¸ÀÌ¸Ó */
+			} else if (i == 10) { /* 10ì´ˆ íƒ€ì´ë¨¸ */
 				putfonts8_asc_sht(sht_back, 0, 64, COL8_FFFFFF, COL8_008484, "10[sec]", 7);
 				sprintf(s, "%010d", count);
 				putfonts8_asc_sht(sht_win, 40, 28, COL8_000000, COL8_C6C6C6, s, 10);
-			} else if (i == 3) { /* 3ÃÊ Å¸ÀÌ¸Ó */
+			} else if (i == 3) { /* 3ì´ˆ íƒ€ì´ë¨¸ */
 				putfonts8_asc_sht(sht_back, 0, 80, COL8_FFFFFF, COL8_008484, "3[sec]", 6);
-				count = 0; /* ÃøÁ¤ °³½Ã */
-			} else if (i == 1) { /* Ä¿¼­¿ë Å¸ÀÌ¸Ó */
-				timer_init(timer3, &fifo, 0); /* ´ÙÀ½Àº 0À» */
+				count = 0; /* ì¸¡ì • ê°œì‹œ */
+			} else if (i == 1) { /* ì»¤ì„œìš© íƒ€ì´ë¨¸ */
+				timer_init(timer3, &fifo, 0); /* ë‹¤ìŒì€ 0ì„ */
 				boxfill8(buf_back, binfo->scrnx, COL8_FFFFFF, 8, 96, 15, 111);
 				timer_settime(timer3, 50);
 				sheet_refresh(sht_back, 8, 96, 16, 112);
-			} else if (i == 0) { /* Ä¿¼­¿ë Å¸ÀÌ¸Ó */
-				timer_init(timer3, &fifo, 1); /* ´ÙÀ½Àº 1À» */
+			} else if (i == 0) { /* ì»¤ì„œìš© íƒ€ì´ë¨¸ */
+				timer_init(timer3, &fifo, 1); /* ë‹¤ìŒì€ 1ì„ */
 				boxfill8(buf_back, binfo->scrnx, COL8_008484, 8, 96, 15, 111);
 				timer_settime(timer3, 50);
 				sheet_refresh(sht_back, 8, 96, 16, 112);

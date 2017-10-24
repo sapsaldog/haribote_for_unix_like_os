@@ -6,8 +6,8 @@ void HariMain(void)
 	char c, cmdline[30], *p;
 
 	api_cmdline(cmdline, 30);
-	for (p = cmdline; *p > ' '; p++) { }	/* ½ºÆäÀÌ½º°¡ ¿Ã ¶§±îÁö °Ç³Ê ¶Ú´Ù */
-	for (; *p == ' '; p++) { }	/* ½ºÆäÀÌ½º¸¦ °Ç³Ê ¶Ú´Ù */
+	for (p = cmdline; *p > ' '; p++) { }	/* ìŠ¤íŽ˜ì´ìŠ¤ê°€ ì˜¬ ë•Œê¹Œì§€ ê±´ë„ˆ ë›´ë‹¤ */
+	for (; *p == ' '; p++) { }	/* ìŠ¤íŽ˜ì´ìŠ¤ë¥¼ ê±´ë„ˆ ë›´ë‹¤ */
 	fh = api_fopen(p);
 	if (fh != 0) {
 		for (;;) {

@@ -1,15 +1,15 @@
-/* ���콺 ���� */
+/* 마우스 관계 */
 
 #include "bootpack.h"
 
 struct FIFO8 mousefifo;
 
 void inthandler2c(int *esp)
-/* PS/2 ���콺�κ����� ���ͷ�Ʈ */
+/* PS/2 마우스로부터의 인터럽트 */
 {
 	unsigned char data;
-	io_out8(PIC1_OCW2, 0x64);	/* IRQ-12 ���� �ϷḦ PIC1�� ���� */
-	io_out8(PIC0_OCW2, 0x62);	/* IRQ-02 ���� �ϷḦ PIC0�� ���� */
+	io_out8(PIC1_OCW2, 0x64);	/* IRQ-12 접수 완료를 PIC1에 통지 */
+	io_out8(PIC0_OCW2, 0x62);	/* IRQ-02 접수 완료를 PIC0에 통지 */
 	data = io_in8(PORT_KEYDAT);
 	fifo8_put(&mousefifo, data);
 	return;
@@ -20,42 +20,42 @@ void inthandler2c(int *esp)
 
 void enable_mouse(struct MOUSE_DEC *mdec)
 {
-	/* ���콺 ��ȿ */
+	/* 마우스 유효 */
 	wait_KBC_sendready();
 	io_out8(PORT_KEYCMD, KEYCMD_SENDTO_MOUSE);
 	wait_KBC_sendready();
 	io_out8(PORT_KEYDAT, MOUSECMD_ENABLE);
-	/* �ߵǸ� ACK(0xfa)�� �۽ŵǾ� �´� */
-	mdec->phase = 0; /* ���콺�� 0xfa�� ��ٸ��� �ִ� �ܰ� */
+	/* 잘되면 ACK(0xfa)가 송신되어 온다 */
+	mdec->phase = 0; /* 마우스의 0xfa를 기다리고 있는 단계 */
 	return;
 }
 
 int mouse_decode(struct MOUSE_DEC *mdec, unsigned char dat)
 {
 	if (mdec->phase == 0) {
-		/* ���콺�� 0 xfa�� ��ٸ��� �ִ� �ܰ� */
+		/* 마우스의 0 xfa를 기다리고 있는 단계 */
 		if (dat == 0xfa) {
 			mdec->phase = 1;
 		}
 		return 0;
 	}
 	if (mdec->phase == 1) {
-		/* ���콺�� 1����Ʈ°�� ��ٸ��� �ִ� �ܰ� */
+		/* 마우스의 1바이트째를 기다리고 있는 단계 */
 		if ((dat & 0xc8) == 0x08) {
-			/* �ùٸ� 1����Ʈ°���� */
+			/* 올바른 1바이트째였다 */
 			mdec->buf[0] = dat;
 			mdec->phase = 2;
 		}
 		return 0;
 	}
 	if (mdec->phase == 2) {
-		/* ���콺�� 2����Ʈ°�� ��ٸ��� �ִ� �ܰ� */
+		/* 마우스의 2바이트째를 기다리고 있는 단계 */
 		mdec->buf[1] = dat;
 		mdec->phase = 3;
 		return 0;
 	}
 	if (mdec->phase == 3) {
-		/* ���콺�� 3����Ʈ°�� ��ٸ��� �ִ� �ܰ� */
+		/* 마우스의 3바이트째를 기다리고 있는 단계 */
 		mdec->buf[2] = dat;
 		mdec->phase = 1;
 		mdec->btn = mdec->buf[0] & 0x07;
@@ -67,8 +67,8 @@ int mouse_decode(struct MOUSE_DEC *mdec, unsigned char dat)
 		if ((mdec->buf[0] & 0x20) != 0) {
 			mdec->y |= 0xffffff00;
 		}
-		mdec->y = - mdec->y; /* ���콺������ y������ ��ȣ�� ȭ��� �ݴ� */
+		mdec->y = - mdec->y; /* 마우스에서는 y방향의 부호가 화면과 반대 */
 		return 1;
 	}
-	return -1; /* ���⿡ �� ���� ���� �� */
+	return -1; /* 여기에 올 일은 없을 것 */
 }

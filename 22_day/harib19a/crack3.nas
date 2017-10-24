@@ -7,7 +7,7 @@
 		MOV		AL,0xff
 		OUT		0x40,AL
 
-; 	║Хюл╟мю╨ юлгоюг га╥н╠в╥╔©║ ╩С╢Г
+; 	Б├▒Л²╢Й╡┐Л²─ Л²╢М∙≤Л²≤ М■└К║°Й╥╦К·╗Л≈░ Л┐│К▀╧
 ;	io_out8(PIT_CTRL, 0x34);
 ;	io_out8(PIT_CNT0, 0xff);
 ;	io_out8(PIT_CNT0, 0xff);

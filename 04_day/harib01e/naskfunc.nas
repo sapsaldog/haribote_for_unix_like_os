@@ -1,10 +1,10 @@
 ; naskfunc
 ; TAB=4
 
-[FORMAT "WCOFF"]				; ¿ÀºêÁ§Æ® ÆÄÀÏÀ» ¸¸µå´Â ¸ðµå	
-[INSTRSET "i486p"]				; 486¸í·É±îÁö »ç¿ëÇÏ°í ½Í´Ù°í ÇÏ´Â ±â¼ú
-[BITS 32]					; 32ºñÆ® ¸ðµå¿ëÀÇ ±â°è¾î¸¦ ¸¸µç´Ù
-[FILE "naskfunc.nas"]				; ¿ø½Ã ÆÄÀÏ¸í Á¤º¸
+[FORMAT "WCOFF"]				; ì˜¤ë¸Œì íŠ¸ íŒŒì¼ì„ ë§Œë“œëŠ” ëª¨ë“œ	
+[INSTRSET "i486p"]				; 486ëª…ë ¹ê¹Œì§€ ì‚¬ìš©í•˜ê³  ì‹¶ë‹¤ê³  í•˜ëŠ” ê¸°ìˆ 
+[BITS 32]					; 32ë¹„íŠ¸ ëª¨ë“œìš©ì˜ ê¸°ê³„ì–´ë¥¼ ë§Œë“ ë‹¤
+[FILE "naskfunc.nas"]				; ì›ì‹œ íŒŒì¼ëª… ì •ë³´
 
 		GLOBAL	_io_hlt
 

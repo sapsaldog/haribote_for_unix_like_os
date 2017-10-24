@@ -1,35 +1,35 @@
 ; hello-os
 ; TAB=4
 
-		ORG		0x7c00			; ÀÌ ÇÁ·Î±×·¥ÀÌ ¾îµð¿¡ ReadµÇ´Â°¡
+		ORG		0x7c00			; ì´ í”„ë¡œê·¸ëž¨ì´ ì–´ë””ì— Readë˜ëŠ”ê°€
 
-; ÀÌÇÏ´Â Ç¥ÁØÀûÀÎ FAT12 Æ÷¸Ë ÇÃ·ÎÇÇ µð½ºÅ©¸¦ À§ÇÑ ±â¼ú
+; ì´í•˜ëŠ” í‘œì¤€ì ì¸ FAT12 í¬ë§· í”Œë¡œí”¼ ë””ìŠ¤í¬ë¥¼ ìœ„í•œ ê¸°ìˆ 
 
 		JMP		entry
 		DB		0x90
-		DB		"HELLOIPL"		; boot sectorÀÇ ÀÌ¸§À» ÀÚÀ¯·Ó°Ô ½áµµ ÁÁ´Ù(8¹ÙÀÌÆ®)
-		DW		512			; 1¼½ÅÍ Å©±â(512·Î ÇØ¾ß ÇÔ)
-		DB		1			; Å¬·¯½ºÅÍ Å©±â(1¼½ÅÍ·Î ÇØ¾ß ÇÔ)
-		DW		1			; FAT°¡ ¾îµð¿¡¼­ ½ÃÀÛµÉ±î(º¸ÅëÀº 1 ¼½ÅÍÂ°ºÎÅÍ)
-		DB		2			; FAT °³¼ö(2·Î ÇØ¾ß ÇÔ)
-		DW		224			; ·çÆ® µð·ºÅä¸® ¿µ¿ªÀÇ Å©±â(º¸ÅëÀº 224¿£Æ®¸®·Î ÇÑ´Ù)
-		DW		2880			; µå¶óÀÌºê Å©±â(2880¼½ÅÍ·Î ÇØ¾ß ÇÔ)
-		DB		0xf0			; ¹Ìµð¾î Å¸ÀÔ(0xf0·Î ÇØ¾ß ÇÔ)
-		DW		9			; FAT¿µ¿ª ±æÀÌ(9¼½ÅÍ·Î ÇØ¾ß ÇÔ)
-		DW		18			; 1Æ®·°¿¡ ¸î°³ÀÇ ¼½ÅÍ°¡ ÀÖÀ»±î(18·Î ÇØ¾ß ÇÔ)
-		DW		2			; ÇìµåÀÇ ¼ö(2·Î ÇÏÁö ¾ÊÀ¸¸é °¥ ¼ö ¾ø´Ù)
-		DD		0			; ÆÄÆ¼¼ÇÀ» »ç¿ëÇÏÁö ¾Ê±â ¶§¹®¿¡ ¿©±â´Â ¹Ýµå½Ã 0
-		DD		2880			; µå¶óÀÌºê Å©±â¸¦ ÇÑ¹ø ´õ write
-		DB		0,0,0x29		; Àß ¸ð¸£Áö¸¸ ÀÌ °ªÀ¸·Î ÇØ µÎ¸é ÁÁÀº °Í °°´Ù
-		DD		0xffffffff		; ¾Æ¸¶, º¼·ý ½Ã¸®¾ó ¹øÈ£
-		DB		"HELLO-OS   "		; µð½ºÅ© ÀÌ¸§(11¹ÙÀÌÆ®)
-		DB		"FAT12   "		; Æ÷¸Ë ÀÌ¸§(8¹ÙÀÌÆ®)
-		RESB	18				; ¿ì¼± 18¹ÙÀÌÆ®¸¦ ºñ¾î µÐ´Ù
+		DB		"HELLOIPL"		; boot sectorì˜ ì´ë¦„ì„ ìžìœ ë¡­ê²Œ ì¨ë„ ì¢‹ë‹¤(8ë°”ì´íŠ¸)
+		DW		512			; 1ì„¹í„° í¬ê¸°(512ë¡œ í•´ì•¼ í•¨)
+		DB		1			; í´ëŸ¬ìŠ¤í„° í¬ê¸°(1ì„¹í„°ë¡œ í•´ì•¼ í•¨)
+		DW		1			; FATê°€ ì–´ë””ì—ì„œ ì‹œìž‘ë ê¹Œ(ë³´í†µì€ 1 ì„¹í„°ì§¸ë¶€í„°)
+		DB		2			; FAT ê°œìˆ˜(2ë¡œ í•´ì•¼ í•¨)
+		DW		224			; ë£¨íŠ¸ ë””ë ‰í† ë¦¬ ì˜ì—­ì˜ í¬ê¸°(ë³´í†µì€ 224ì—”íŠ¸ë¦¬ë¡œ í•œë‹¤)
+		DW		2880			; ë“œë¼ì´ë¸Œ í¬ê¸°(2880ì„¹í„°ë¡œ í•´ì•¼ í•¨)
+		DB		0xf0			; ë¯¸ë””ì–´ íƒ€ìž…(0xf0ë¡œ í•´ì•¼ í•¨)
+		DW		9			; FATì˜ì—­ ê¸¸ì´(9ì„¹í„°ë¡œ í•´ì•¼ í•¨)
+		DW		18			; 1íŠ¸ëŸ­ì— ëª‡ê°œì˜ ì„¹í„°ê°€ ìžˆì„ê¹Œ(18ë¡œ í•´ì•¼ í•¨)
+		DW		2			; í—¤ë“œì˜ ìˆ˜(2ë¡œ í•˜ì§€ ì•Šìœ¼ë©´ ê°ˆ ìˆ˜ ì—†ë‹¤)
+		DD		0			; íŒŒí‹°ì…˜ì„ ì‚¬ìš©í•˜ì§€ ì•Šê¸° ë•Œë¬¸ì— ì—¬ê¸°ëŠ” ë°˜ë“œì‹œ 0
+		DD		2880			; ë“œë¼ì´ë¸Œ í¬ê¸°ë¥¼ í•œë²ˆ ë” write
+		DB		0,0,0x29		; ìž˜ ëª¨ë¥´ì§€ë§Œ ì´ ê°’ìœ¼ë¡œ í•´ ë‘ë©´ ì¢‹ì€ ê²ƒ ê°™ë‹¤
+		DD		0xffffffff		; ì•„ë§ˆ, ë³¼ë¥¨ ì‹œë¦¬ì–¼ ë²ˆí˜¸
+		DB		"HELLO-OS   "		; ë””ìŠ¤í¬ ì´ë¦„(11ë°”ì´íŠ¸)
+		DB		"FAT12   "		; í¬ë§· ì´ë¦„(8ë°”ì´íŠ¸)
+		RESB	18				; ìš°ì„  18ë°”ì´íŠ¸ë¥¼ ë¹„ì–´ ë‘”ë‹¤
 
-; ÇÁ·Î±×·¥ º»Ã¼
+; í”„ë¡œê·¸ëž¨ ë³¸ì²´
 
 entry:
-		MOV		AX, 0			; ·¹Áö½ºÅÍ ÃÊ±âÈ­
+		MOV		AX, 0			; ë ˆì§€ìŠ¤í„° ì´ˆê¸°í™”
 		MOV		SS,AX
 		MOV		SP,0x7c00
 		MOV		DS,AX
@@ -38,23 +38,23 @@ entry:
 		MOV		SI,msg
 putloop:
 		MOV		AL,[SI]
-		ADD		SI, 1			; SI¿¡ 1À» ´õÇÑ´Ù
+		ADD		SI, 1			; SIì— 1ì„ ë”í•œë‹¤
 		CMP		AL,0
 		JE		fin
-		MOV		AH, 0x0e		; ÇÑ ±ÛÀÚ Ç¥½Ã function
-		MOV		BX, 15			; Ä®¶ó ÄÚµå
-		INT		0x10			; ºñµð¿À BIOS È£Ãâ
+		MOV		AH, 0x0e		; í•œ ê¸€ìž í‘œì‹œ function
+		MOV		BX, 15			; ì¹¼ë¼ ì½”ë“œ
+		INT		0x10			; ë¹„ë””ì˜¤ BIOS í˜¸ì¶œ
 		JMP		putloop
 fin:
-		HLT					; ¹«¾ùÀÎ°¡ ÀÖÀ» ¶§±îÁö CPU¸¦ Á¤Áö½ÃÅ²´Ù
+		HLT					; ë¬´ì—‡ì¸ê°€ ìžˆì„ ë•Œê¹Œì§€ CPUë¥¼ ì •ì§€ì‹œí‚¨ë‹¤
 		JMP		fin			; Endless Loop
 
 msg:
-		DB		0x0a, 0x0a		; °³ÇàÀ» 2°³
+		DB		0x0a, 0x0a		; ê°œí–‰ì„ 2ê°œ
 		DB		"hello, world"
-		DB		0x0a			; °³Çà
+		DB		0x0a			; ê°œí–‰
 		DB		0
 
-		RESB	0x7dfe-$			; 0x7dfe±îÁö¸¦ 0x00·Î Ã¤¿ì´Â ¸í·É
+		RESB	0x7dfe-$			; 0x7dfeê¹Œì§€ë¥¼ 0x00ë¡œ ì±„ìš°ëŠ” ëª…ë ¹
 
 		DB		0x55, 0xaa

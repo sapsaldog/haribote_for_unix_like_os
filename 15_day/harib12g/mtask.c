@@ -1,4 +1,4 @@
-/* ¸ÖÆ¼ÅÂ½ºÅ© °ü°è */
+/* ë©€í‹°íƒœìŠ¤í¬ ê´€ê³„ */
 
 #include "bootpack.h"
 
@@ -8,7 +8,7 @@ int mt_tr;
 void mt_init(void)
 {
 	mt_timer = timer_alloc();
-	/* timer_init´Â ÇÊ¿ä¾ø±â ¶§¹®¿¡ ÇÏÁö ¾Ê´Â´Ù */
+	/* timer_initëŠ” í•„ìš”ì—†ê¸° ë•Œë¬¸ì— í•˜ì§€ ì•ŠëŠ”ë‹¤ */
 	timer_settime(mt_timer, 2);
 	mt_tr = 3 * 8;
 	return;

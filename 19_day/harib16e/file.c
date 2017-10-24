@@ -1,9 +1,9 @@
-/* ÆÄÀÏ °ü°è */
+/* íŒŒì¼ ê´€ê³„ */
 
 #include "bootpack.h"
 
 void file_readfat(int *fat, unsigned char *img)
-/* µğ½ºÅ© ÀÌ¹ÌÁö³»ÀÇ FATÀÇ ¾ĞÃàÀ» Ç¬´Ù */
+/* ë””ìŠ¤í¬ ì´ë¯¸ì§€ë‚´ì˜ FATì˜ ì••ì¶•ì„ í‘¼ë‹¤ */
 {
 	int i, j = 0;
 	for (i = 0; i < 2880; i += 2) {

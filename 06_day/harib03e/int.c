@@ -1,31 +1,31 @@
-/* юнем╥╢ф╝ ╟Э╟Х */
+/* Л²╦М└╟К÷╫М┼╦ Й╢─ЙЁ└ */
 
 #include "bootpack.h"
 
 void init_pic(void)
-/* PICюг цй╠Бх╜ */
+/* PICЛ²≤ Л╢┬Й╦╟М≥■ */
 {
-	io_out8(PIC0_IMR,  0xff  ); /* ╦П╣Г юнем╥╢ф╝╦╕ ╧ч╬ф╣ИюлаЖ ╬й╢б╢ы */
-	io_out8(PIC1_IMR,  0xff  ); /* ╦П╣Г юнем╥╢ф╝╦╕ ╧ч╬ф╣ИюлаЖ ╬й╢б╢ы */
+	io_out8(PIC0_IMR,  0xff  ); /* К╙╗К⌠═ Л²╦М└╟К÷╫М┼╦К╔╪ К╟⌡Л∙└К⌠╓Л²╢Л╖─ Л∙┼К┼■К▀╓ */
+	io_out8(PIC1_IMR,  0xff  ); /* К╙╗К⌠═ Л²╦М└╟К÷╫М┼╦К╔╪ К╟⌡Л∙└К⌠╓Л²╢Л╖─ Л∙┼К┼■К▀╓ */
 
-	io_out8(PIC0_ICW1, 0x11  ); /* edge trigger ╦П╣Е */
-	io_out8(PIC0_ICW2, 0x20  ); /* IRQ0-7ю╨, INT20-27ю╦╥н ╧ч╢б╢ы */
-	io_out8(PIC0_ICW3, 1 << 2); /* PIC1╢б IRQ2©║╪╜ а╒╪с */
-	io_out8(PIC0_ICW4, 0x01  ); /* non buffer╦П╣Е */
+	io_out8(PIC0_ICW1, 0x11  ); /* edge trigger К╙╗К⌠° */
+	io_out8(PIC0_ICW2, 0x20  ); /* IRQ0-7Л²─, INT20-27Л°╪К║° К╟⌡К┼■К▀╓ */
+	io_out8(PIC0_ICW3, 1 << 2); /* PIC1К┼■ IRQ2Л≈░Л└° Л═▒Л├█ */
+	io_out8(PIC0_ICW4, 0x01  ); /* non bufferК╙╗К⌠° */
 
-	io_out8(PIC1_ICW1, 0x11  ); /* edge trigger ╦П╣Е */
-	io_out8(PIC1_ICW2, 0x28  ); /* IRQ8-15╢б, INT28-2 f╥н ╧ч╢б╢ы */
-	io_out8(PIC1_ICW3, 2     ); /* PIC1╢б IRQ2©║╪╜ а╒╪с */
-	io_out8(PIC1_ICW4, 0x01  ); /* non buffer╦П╣Е */
+	io_out8(PIC1_ICW1, 0x11  ); /* edge trigger К╙╗К⌠° */
+	io_out8(PIC1_ICW2, 0x28  ); /* IRQ8-15К┼■, INT28-2 fК║° К╟⌡К┼■К▀╓ */
+	io_out8(PIC1_ICW3, 2     ); /* PIC1К┼■ IRQ2Л≈░Л└° Л═▒Л├█ */
+	io_out8(PIC1_ICW4, 0x01  ); /* non bufferК╙╗К⌠° */
 
-	io_out8(PIC0_IMR,  0xfb  ); /* 11111011 PIC1 юл©э╢б ╦П╣н ╠щаЖ */
-	io_out8(PIC1_IMR,  0xff  ); /* 11111111 ╦П╣Г юнем╥╢ф╝╦╕ ╧ч╬ф╣ИюлаЖ ╬й╢б╢ы */
+	io_out8(PIC0_IMR,  0xfb  ); /* 11111011 PIC1 Л²╢Л≥╦К┼■ К╙╗К▒░ Й╦┬Л╖─ */
+	io_out8(PIC1_IMR,  0xff  ); /* 11111111 К╙╗К⌠═ Л²╦М└╟К÷╫М┼╦К╔╪ К╟⌡Л∙└К⌠╓Л²╢Л╖─ Л∙┼К┼■К▀╓ */
 
 	return;
 }
 
 void inthandler21(int *esp)
-/* PS/2 е╟╨╦╣Е╥н╨немюг юнем╥╢ф╝ */
+/* PS/2 М┌╓КЁ╢К⌠°К║°К╤─М└╟Л²≤ Л²╦М└╟К÷╫М┼╦ */
 {
 	struct BOOTINFO *binfo = (struct BOOTINFO *) ADR_BOOTINFO;
 	boxfill8(binfo->vram, binfo->scrnx, COL8_000000, 0, 0, 32 * 8 - 1, 15);
@@ -36,7 +36,7 @@ void inthandler21(int *esp)
 }
 
 void inthandler2c(int *esp)
-/* PS/2 ╦╤©Л╫╨╥н╨немюг юнем╥╢ф╝ */
+/* PS/2 К╖┬Л ╟Л┼╓К║°К╤─М└╟Л²≤ Л²╦М└╟К÷╫М┼╦ */
 {
 	struct BOOTINFO *binfo = (struct BOOTINFO *) ADR_BOOTINFO;
 	boxfill8(binfo->vram, binfo->scrnx, COL8_000000, 0, 0, 32 * 8 - 1, 15);

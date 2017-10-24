@@ -3,7 +3,7 @@ void write_mem8(int addr, int data);
 
 void HariMain(void)
 {
-	int i; /* º¯¼ö ¼±¾ğ.i¶ó°í ÇÏ´Â º¯¼ö´Â 32 ºñÆ®ÀÇ Á¤¼öÇü */
+	int i; /* ë³€ìˆ˜ ì„ ì–¸.ië¼ê³  í•˜ëŠ” ë³€ìˆ˜ëŠ” 32 ë¹„íŠ¸ì˜ ì •ìˆ˜í˜• */
 
 	for (i = 0xa0000; i <= 0xaffff; i++) {
 		write_mem8(i, 15); /* MOV BYTE [i], 15 */

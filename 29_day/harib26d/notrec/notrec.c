@@ -10,7 +10,7 @@ void HariMain(void)
 	api_boxfilwin(win,  50, 30,  99, 49, 255);
 	for (;;) {
 		if (api_getkey(1) == 0x0a) {
-			break; /* Enter¶ó¸é break; */
+			break; /* Enterë¼ë©´ break; */
 		}
 	}
 	api_end();

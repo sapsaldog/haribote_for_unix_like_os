@@ -18,9 +18,9 @@ void HariMain(void)
 	api_boxfilwin(win, 8, 29, 207, 228, 0);
 	for (i = 0; i <= 14; i++) {
 		for (j = i + 1; j <= 15; j++) {
-			dis = j - i; /* 2°³ Á¡ÀÇ °Å¸® */
+			dis = j - i; /* 2ê°œ ì ì˜ ê±°ë¦¬ */
 			if (dis >= 8) {
-				dis = 15 - dis; /* ¿ªÈ¸ÀüÀ¸·Î ¼¾´Ù */
+				dis = 15 - dis; /* ì—­íšŒì „ìœ¼ë¡œ ì„¼ë‹¤ */
 			}
 			if (dis != 0) {
 				api_linewin(win, table[i].x, table[i].y, table[j].x, table[j].y, 8 - dis);
@@ -30,7 +30,7 @@ void HariMain(void)
 
 	for (;;) {
 		if (api_getkey(1) == 0x0a) {
-			break; /* Enter¶ó¸é break; */
+			break; /* Enterë¼ë©´ break; */
 		}
 	}
 	api_end();

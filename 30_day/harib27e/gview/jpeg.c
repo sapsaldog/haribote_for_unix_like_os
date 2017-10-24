@@ -6,8 +6,8 @@
  * history::
  * 2003/04/28 | added OSASK-GUI ( by H.Kawai )
  * 2003/05/12 | optimized DCT ( 20-bits fixed point, etc...) -> line 407-464 ( by I.Tak. )
- * 2003/09/27 | PICTURE0.BIN(DLL)¿ëÀ¸·Î °³Á¶ ( by Äí¹Î)
- * 2003/09/28 | °¢Á¾ ¹ö±× ¼öÁ¤ £¦´Ù¼ÒÀÇ ÃÖÀûÈ­ ( by H.Kawai )
+ * 2003/09/27 | PICTURE0.BIN(DLL)ìš©ìœ¼ë¡œ ê°œì¡° ( by ì¿ ë¯¼)
+ * 2003/09/28 | ê°ì¢… ë²„ê·¸ ìˆ˜ì • ï¼†ë‹¤ì†Œì˜ ìµœì í™” ( by H.Kawai )
  *
  */
 
@@ -18,7 +18,7 @@ struct DLL_STRPICENV { int work[16384]; };
 
 typedef struct
 {
-    int elem; //¿ä¼Ò¼ö
+    int elem; //ìš”ì†Œìˆ˜
     unsigned short code[256];
     unsigned char  size[256];
     unsigned char  value[256];
@@ -46,14 +46,14 @@ typedef struct
     int scan_id[3];
     int scan_ac[3];
     int scan_dc[3];
-    int scan_h[3];  // »ùÇÃ¸µ ¿ä¼Ò¼ö
-    int scan_v[3];  // »ùÇÃ¸µ ¿ä¼Ò¼ö
-    int scan_qt[3]; // ¾çÀÚÈ­ Å×ÀÌºí ÀÎµ¦½º
+    int scan_h[3];  // ìƒ˜í”Œë§ ìš”ì†Œìˆ˜
+    int scan_v[3];  // ìƒ˜í”Œë§ ìš”ì†Œìˆ˜
+    int scan_qt[3]; // ì–‘ìí™” í…Œì´ë¸” ì¸ë±ìŠ¤
     
     // DRI
     int interval;
 
-    int mcu_buf[32*32*4]; //¹öÆÛ
+    int mcu_buf[32*32*4]; //ë²„í¼
     int *mcu_yuv[4];
     int mcu_preDC[3];
     
@@ -71,7 +71,7 @@ typedef struct
     int bit_remain;
     int width_buf;
 
-	int base_img[64][64]; // ±âÀú È­»ó ( [¿·ÁÖÆÄ¼ö u¥ğ][¼¼·Î ÁÖÆÄ¼ö v¥ğ][¿·À§»ó(M/8)][¼¼·Î À§»ó(N/8)]
+	int base_img[64][64]; // ê¸°ì € í™”ìƒ ( [ì˜†ì£¼íŒŒìˆ˜ uÏ€][ì„¸ë¡œ ì£¼íŒŒìˆ˜ vÏ€][ì˜†ìœ„ìƒ(M/8)][ì„¸ë¡œ ìœ„ìƒ(N/8)]
 
     /* for dll 
     
@@ -134,7 +134,7 @@ int decode0_JPEG(struct DLL_STRPICENV *env, int size, UCHAR *fp0, int b_type, UC
 
 //	if (jpeg->width == 0)
 //		return 8;
-	/* decode0¿¡¼­´Â infoÇÏ°í ³ª¼­ callµÇ¹Ç·Î, ÀÌ°ÍÀº ¾ø´Ù */
+	/* decode0ì—ì„œëŠ” infoí•˜ê³  ë‚˜ì„œ callë˜ë¯€ë¡œ, ì´ê²ƒì€ ì—†ë‹¤ */
 
 	jpeg->width_buf = skip / (b_type & 0x7f) + jpeg->width;
     jpeg_decode(jpeg, buf, b_type);
@@ -161,12 +161,12 @@ unsigned short get_bits(JPEG *jpeg, int bit)
 			goto fin;
 		}
 		c = *jpeg->fp++;
-		if (c == 0xff) { // ¿¡·¯¸¦ ¸·±â À§ÇØ FF -> FF 00¿¡ escapeµÇ°í ÀÖ´Ù
+		if (c == 0xff) { // ì—ëŸ¬ë¥¼ ë§‰ê¸° ìœ„í•´ FF -> FF 00ì— escapeë˜ê³  ìˆë‹¤
 			if (jpeg->fp >= jpeg->fp1) {
 				ret = 0;
 				goto fin;
 			}
-			jpeg->fp++; /* 00À» skip */
+			jpeg->fp++; /* 00ì„ skip */
 		}
 		buff = (buff << 8) | c;
 		remain += 8;
@@ -180,7 +180,7 @@ fin:
 	return ret;
 }
 
-// ------------------------ JPEG ¼¼±×¸ÕÆ®(segment) -----------------
+// ------------------------ JPEG ì„¸ê·¸ë¨¼íŠ¸(segment) -----------------
 
 // start of frame
 int jpeg_sof(JPEG *jpeg)
@@ -190,7 +190,7 @@ int jpeg_sof(JPEG *jpeg)
 
 	if (jpeg->fp + 8 > jpeg->fp1)
 		goto err;
-	/* fp[2] ´Â bpp */
+	/* fp[2] ëŠ” bpp */
 	jpeg->height = jpeg->fp[3] << 8 | jpeg->fp[4];
 	jpeg->width  = jpeg->fp[5] << 8 | jpeg->fp[6];
 	n = jpeg->compo_count = jpeg->fp[7]; // Num of compo, nf
@@ -279,8 +279,8 @@ int jpeg_dht(JPEG *jpeg)
 			goto err;
 		val = jpeg->fp[0];
 
-		tc = (val >> 4) & 0x0f; // Å×ÀÌºí Å¬·¡½º(DC/AC¼ººĞ selector)
-		th =  val       & 0x0f; // Å×ÀÌºí Çì´õ
+		tc = (val >> 4) & 0x0f; // í…Œì´ë¸” í´ë˜ìŠ¤(DC/ACì„±ë¶„ selector)
+		th =  val       & 0x0f; // í…Œì´ë¸” í—¤ë”
 		table = &(jpeg->huff[tc][th]);
 
 		num = 0;
@@ -335,7 +335,7 @@ int jpeg_init(JPEG *jpeg)
 	jpeg->max_v = 0;
 	jpeg->bit_remain = 0;
 	jpeg->bit_buff   = 0;
-	// DRI ¸®¼Â ¾øÀ½
+	// DRI ë¦¬ì…‹ ì—†ìŒ
 	jpeg->interval = 0;
 //	return;
 //}
@@ -384,7 +384,7 @@ int jpeg_init(JPEG *jpeg)
 			jpeg->fp += 3; /* 3bytes skip */
             goto fin;
 		} else {
-			/* ¹Ì´ëÀÀ */
+			/* ë¯¸ëŒ€ì‘ */
 			if (jpeg->fp + 2 > jpeg->fp1)
 				goto err;
 			jpeg->fp += jpeg->fp[0] << 8 | jpeg->fp[1];
@@ -400,7 +400,7 @@ fin:
 
 // MCU decode
 
-// µğÄÚµå
+// ë””ì½”ë“œ
 void jpeg_decode_init(JPEG *jpeg)
 {
 	int i, j;
@@ -472,7 +472,7 @@ void jpeg_idct_init(int base_img[64][64])
             if (d == 0)
                 i = 4;
             for (m = 0; m < 8; m++){
-                tmpm[m] = cost[i]; // ¿·ÀÇ Cos ÆÄÇü
+                tmpm[m] = cost[i]; // ì˜†ì˜ Cos íŒŒí˜•
                 i=(i+d)&31;
             }
         }
@@ -482,11 +482,11 @@ void jpeg_idct_init(int base_img[64][64])
                 if (d == 0)
                     i=4;
                 for (n = 0; n < 8; n++){
-                    tmpn[n] = cost[i]; // ¼¼·ÎÀÇ Cos ÆÄÇü
+                    tmpn[n] = cost[i]; // ì„¸ë¡œì˜ Cos íŒŒí˜•
                     i=(i+d)&31;
                 }
             }
-            // °ö¼À ÈÄ ±âÀú È­»ó¿¡
+            // ê³±ì…ˆ í›„ ê¸°ì € í™”ìƒì—
             for (m = 0; m < 8; m++) {
                 for (n = 0; n < 8; n++) {
                     base_img[u * 8 + v][m * 8 + n] = (tmpm[m] * tmpn[n])>>15;
@@ -512,13 +512,13 @@ void jpeg_idct(int *block, int *dest, int base_img[64][64])
             }
         }
     }
-    // °íÁ¤ ¼Ò¼öÁ¡À» ¿ø·¡´ë·Î µÇµ¹¸®±â À§ÇØ +4·Î ³ª´«´Ù
+    // ê³ ì • ì†Œìˆ˜ì ì„ ì›ë˜ëŒ€ë¡œ ë˜ëŒë¦¬ê¸° ìœ„í•´ +4ë¡œ ë‚˜ëˆˆë‹¤
     for (i = 0; i < 64; i++)
         dest[i] >>= 17;
     return;
 }
 
-// encodeµÈ ¼öÄ¡¸¦ ¿ø·¡´ë·Î µÇµ¹¸°´Ù
+// encodeëœ ìˆ˜ì¹˜ë¥¼ ì›ë˜ëŒ€ë¡œ ë˜ëŒë¦°ë‹¤
 int jpeg_get_value(JPEG *jpeg, int size)
 {
 	int val = 0;
@@ -532,7 +532,7 @@ int jpeg_get_value(JPEG *jpeg, int size)
     return val;
 }
 
-// ---- ºí·ÏÀÇ µğÄÚµå ---
+// ---- ë¸”ë¡ì˜ ë””ì½”ë“œ ---
 int jpeg_decode_huff(JPEG *jpeg, int scan, int *block, UCHAR *zigzag_table)
 {
     int size, len, val, run, index;
@@ -546,7 +546,7 @@ int jpeg_decode_huff(JPEG *jpeg, int scan, int *block, UCHAR *zigzag_table)
     jpeg->mcu_preDC[scan] += val;
     block[0] = jpeg->mcu_preDC[scan] * pQt[0];
 
-    //ACº¹È£
+    //ACë³µí˜¸
     index = 1;
     while(index<64)
     {
@@ -563,7 +563,7 @@ int jpeg_decode_huff(JPEG *jpeg, int scan, int *block, UCHAR *zigzag_table)
         
         val = jpeg_get_value(jpeg, size);
         if(val>=0x10000) {
-            //¸¶Ä¿ ¹ß°ß
+            //ë§ˆì»¤ ë°œê²¬
             return val;
         }
 
@@ -579,7 +579,7 @@ int jpeg_decode_huff(JPEG *jpeg, int scan, int *block, UCHAR *zigzag_table)
     return 0;
 }
 
-// ºí·Ï 
+// ë¸”ë¡ 
 void jpeg_mcu_bitblt(int *src, int *dest, int width,
                      int x0, int y0, int x1, int y1)
 {
@@ -598,7 +598,7 @@ void jpeg_mcu_bitblt(int *src, int *dest, int width,
 	}
 }
 
-// MCU ÇÑ °³ º¯È¯
+// MCU í•œ ê°œ ë³€í™˜
 int jpeg_decode_mcu(JPEG *jpeg, UCHAR *zigzag_table)
 {
 	int scan, val;
@@ -606,25 +606,25 @@ int jpeg_decode_mcu(JPEG *jpeg, UCHAR *zigzag_table)
 	int *p, hh, vv;
 	int block[64], dest[64];
 
-	// mcu_width x mcu_height »çÀÌÁîÀÇ ºí·°À» Àü°³
+	// mcu_width x mcu_height ì‚¬ì´ì¦ˆì˜ ë¸”ëŸ­ì„ ì „ê°œ
 	for (scan = 0; scan < jpeg->scan_count; scan++) {
 		hh = jpeg->scan_h[scan];
 		vv = jpeg->scan_v[scan];
 		for (v = 0; v < vv; v++) {
             for (h = 0; h < hh; h++) {
-				// ºí·°(8x8)ÀÇ µğÄÚµå
+				// ë¸”ëŸ­(8x8)ì˜ ë””ì½”ë“œ
 				val = jpeg_decode_huff(jpeg, scan, block, zigzag_table);
 			//	if(val>=0x10000){
 			//		printf("marker found:%02x\n", val);
 			//	}
 
-				// ¿ªDCT
+				// ì—­DCT
 				jpeg_idct(block, dest, jpeg->base_img);
 
-				// write ¹öÆÛ
+				// write ë²„í¼
 				p = jpeg->mcu_buf + (scan << 10);
 
-                // È®´ë Àü¼Û
+                // í™•ëŒ€ ì „ì†¡
 				jpeg_mcu_bitblt(dest, p, jpeg->mcu_width,
 					jpeg->mcu_width * h / hh, jpeg->mcu_height * v / vv,
 					jpeg->mcu_width * (h + 1) / hh, jpeg->mcu_height * (v + 1) / vv);
@@ -721,13 +721,13 @@ void jpeg_decode(JPEG *jpeg, UCHAR *rgb, int b_type)
 	INIT_ZTABLE(48, 58, 59, 52, 45); INIT_ZTABLE(52, 38, 31, 39, 46);
 	INIT_ZTABLE(56, 53, 60, 61, 54); INIT_ZTABLE(60, 47, 55, 62, 63);
 
-	// MCU »çÀÌÁî °è»ê
+	// MCU ì‚¬ì´ì¦ˆ ê³„ì‚°
 	jpeg_decode_init(jpeg);
 
 	h_unit = (jpeg->width + jpeg->mcu_width - 1) / jpeg->mcu_width;
 	v_unit = (jpeg->height + jpeg->mcu_height - 1) / jpeg->mcu_height;
 
-	// 1 ºí·° Àü°³ÇÒÁöµµ ¸ğ¸¥´Ù
+	// 1 ë¸”ëŸ­ ì „ê°œí• ì§€ë„ ëª¨ë¥¸ë‹¤
 	mcu_count = 0;
 	for (v = 0; v < v_unit; v++) {
 		for (h = 0; h < h_unit; h++) {
@@ -735,7 +735,7 @@ void jpeg_decode(JPEG *jpeg, UCHAR *rgb, int b_type)
 			jpeg_decode_mcu(jpeg, zigzag_table);
 			jpeg_decode_yuv(jpeg, h, v, rgb, b_type & 0x7fff);
 			if (jpeg->interval > 0 && mcu_count >= jpeg->interval) {
-				// hoge´Â °Ç³Ê ¶Ù°í ÀÖ±â ¶§¹®¿¡, FFµµ °Ç³Ê ¶Ú´Ù
+				// hogeëŠ” ê±´ë„ˆ ë›°ê³  ìˆê¸° ë•Œë¬¸ì—, FFë„ ê±´ë„ˆ ë›´ë‹¤
 				jpeg->bit_remain -= (jpeg->bit_remain & 7);
 				jpeg->bit_remain -= 8;
 				jpeg->mcu_preDC[0] = 0;

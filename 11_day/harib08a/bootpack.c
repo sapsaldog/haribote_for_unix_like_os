@@ -1,4 +1,4 @@
-/* bootpackÀÇ ¸ŞÀÎ */
+/* bootpackì˜ ë©”ì¸ */
 
 #include "bootpack.h"
 #include <stdio.h>
@@ -17,11 +17,11 @@ void HariMain(void)
 
 	init_gdtidt();
 	init_pic();
-	io_sti(); /* IDT/PICÀÇ ÃÊ±âÈ­°¡ ³¡³µÀ¸¹Ç·Î CPUÀÇ ÀÎÅÍ·´Æ® ±İÁö¸¦ ÇØÁ¦ */
+	io_sti(); /* IDT/PICì˜ ì´ˆê¸°í™”ê°€ ëë‚¬ìœ¼ë¯€ë¡œ CPUì˜ ì¸í„°ëŸ½íŠ¸ ê¸ˆì§€ë¥¼ í•´ì œ */
 	fifo8_init(&keyfifo, 32, keybuf);
 	fifo8_init(&mousefifo, 128, mousebuf);
-	io_out8(PIC0_IMR, 0xf9); /* PIC1¿Í Å°º¸µå¸¦ Çã°¡(11111001) */
-	io_out8(PIC1_IMR, 0xef); /* ¸¶¿ì½º¸¦ Çã°¡(11101111) */
+	io_out8(PIC0_IMR, 0xf9); /* PIC1ì™€ í‚¤ë³´ë“œë¥¼ í—ˆê°€(11111001) */
+	io_out8(PIC1_IMR, 0xef); /* ë§ˆìš°ìŠ¤ë¥¼ í—ˆê°€(11101111) */
 
 	init_keyboard();
 	enable_mouse(&mdec);
@@ -35,12 +35,12 @@ void HariMain(void)
 	sht_back  = sheet_alloc(shtctl);
 	sht_mouse = sheet_alloc(shtctl);
 	buf_back  = (unsigned char *) memman_alloc_4k(memman, binfo->scrnx * binfo->scrny);
-	sheet_setbuf(sht_back, buf_back, binfo->scrnx, binfo->scrny, -1); /* Åõ¸í»ö¾øÀ½ */
+	sheet_setbuf(sht_back, buf_back, binfo->scrnx, binfo->scrny, -1); /* íˆ¬ëª…ìƒ‰ì—†ìŒ */
 	sheet_setbuf(sht_mouse, buf_mouse, 16, 16, 99);
 	init_screen8(buf_back, binfo->scrnx, binfo->scrny);
 	init_mouse_cursor8(buf_mouse, 99);
 	sheet_slide(shtctl, sht_back, 0, 0);
-	mx = (binfo->scrnx - 16) / 2; /* È­¸é Áß¾ÓÀÌ µÇµµ·Ï ÁÂÇ¥ °è»ê */
+	mx = (binfo->scrnx - 16) / 2; /* í™”ë©´ ì¤‘ì•™ì´ ë˜ë„ë¡ ì¢Œí‘œ ê³„ì‚° */
 	my = (binfo->scrny - 28 - 16) / 2;
 	sheet_slide(shtctl, sht_mouse, mx, my);
 	sheet_updown(shtctl, sht_back,  0);
@@ -68,7 +68,7 @@ void HariMain(void)
 				i = fifo8_get(&mousefifo);
 				io_sti();
 				if (mouse_decode(&mdec, i) != 0) {
-					/* µ¥ÀÌÅÍ°¡ 3¹ÙÀÌÆ® ¸ğ¿´À¸¹Ç·Î Ç¥½Ã */
+					/* ë°ì´í„°ê°€ 3ë°”ì´íŠ¸ ëª¨ì˜€ìœ¼ë¯€ë¡œ í‘œì‹œ */
 					sprintf(s, "[lcr %4d %4d]", mdec.x, mdec.y);
 					if ((mdec.btn & 0x01) != 0) {
 						s[1] = 'L';
@@ -82,7 +82,7 @@ void HariMain(void)
 					boxfill8(buf_back, binfo->scrnx, COL8_008484, 32, 16, 32 + 15 * 8 - 1, 31);
 					putfonts8_asc(buf_back, binfo->scrnx, 32, 16, COL8_FFFFFF, s);
 					sheet_refresh(shtctl, sht_back, 32, 16, 32 + 15 * 8, 32);
-					/* ¸¶¿ì½º Ä¿¼­ÀÇ ÀÌµ¿ */
+					/* ë§ˆìš°ìŠ¤ ì»¤ì„œì˜ ì´ë™ */
 					mx += mdec.x;
 					my += mdec.y;
 					if (mx < 0) {
@@ -98,8 +98,8 @@ void HariMain(void)
 						my = binfo->scrny - 1;
 					}
 					sprintf(s, "(%3d, %3d)", mx, my);
-					boxfill8(buf_back, binfo->scrnx, COL8_008484, 0, 0, 79, 15); /* ÁÂÇ¥ Áö¿î´Ù */
-					putfonts8_asc(buf_back, binfo->scrnx, 0, 0, COL8_FFFFFF, s); /* ÁÂÇ¥ ¾´´Ù */
+					boxfill8(buf_back, binfo->scrnx, COL8_008484, 0, 0, 79, 15); /* ì¢Œí‘œ ì§€ìš´ë‹¤ */
+					putfonts8_asc(buf_back, binfo->scrnx, 0, 0, COL8_FFFFFF, s); /* ì¢Œí‘œ ì“´ë‹¤ */
 					sheet_refresh(shtctl, sht_back, 0, 0, 80, 16);
 					sheet_slide(shtctl, sht_mouse, mx, my);
 				}

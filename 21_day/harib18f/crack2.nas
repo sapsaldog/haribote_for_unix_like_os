@@ -1,6 +1,6 @@
 [INSTRSET "i486p"]
 [BITS 32]
-		MOV		EAX,1*8			; OS¿ëÀÇ ¼¼±×¸ÕÆ®(segment) ¹øÈ£
-		MOV		DS, AX			; ÀÌ°ÍÀ» DS¿¡ ³Ö¾î¹ö¸°´Ù
+		MOV		EAX,1*8			; OSìš©ì˜ ì„¸ê·¸ë¨¼íŠ¸(segment) ë²ˆí˜¸
+		MOV		DS, AX			; ì´ê²ƒì„ DSì— ë„£ì–´ë²„ë¦°ë‹¤
 		MOV		BYTE [0x102600],0
 		RETF

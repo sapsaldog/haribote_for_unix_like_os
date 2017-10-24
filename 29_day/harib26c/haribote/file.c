@@ -1,9 +1,9 @@
-/* ÆÄÀÏ °ü°è */
+/* íŒŒì¼ ê´€ê³„ */
 
 #include "bootpack.h"
 
 void file_readfat(int *fat, unsigned char *img)
-/* µğ½ºÅ© ÀÌ¹ÌÁö³»ÀÇ FATÀÇ ¾ĞÃàÀ» Ç¬´Ù */
+/* ë””ìŠ¤í¬ ì´ë¯¸ì§€ë‚´ì˜ FATì˜ ì••ì¶•ì„ í‘¼ë‹¤ */
 {
 	int i, j = 0;
 	for (i = 0; i < 2880; i += 2) {
@@ -43,13 +43,13 @@ struct FILEINFO *file_search(char *name, struct FILEINFO *finfo, int max)
 	}
 	j = 0;
 	for (i = 0; name[i] != 0; i++) {
-		if (j >= 11) { return 0; /* ¹ß°ßµÇÁö ¾Ê¾Ò´Ù */ }
+		if (j >= 11) { return 0; /* ë°œê²¬ë˜ì§€ ì•Šì•˜ë‹¤ */ }
 		if (name[i] == '.' && j <= 8) {
 			j = 8;
 		} else {
 			s[j] = name[i];
 			if ('a' <= s[j] && s[j] <= 'z') {
-				/* ¼Ò¹®ÀÚ´Â ´ë¹®ÀÚ·Î °íÄ£´Ù */
+				/* ì†Œë¬¸ìëŠ” ëŒ€ë¬¸ìë¡œ ê³ ì¹œë‹¤ */
 				s[j] -= 0x20;
 			} 
 			j++;
@@ -65,12 +65,12 @@ struct FILEINFO *file_search(char *name, struct FILEINFO *finfo, int max)
 					goto next;
 				}
 			}
-			return finfo + i; /* ÆÄÀÏÀÌ ¹ß°ßµÇ¾ú´Ù */
+			return finfo + i; /* íŒŒì¼ì´ ë°œê²¬ë˜ì—ˆë‹¤ */
 		}
 next:
 		i++;
 	}
-	return 0; /* ¹ß°ßµÇÁö ¾Ê¾Ò´Ù */
+	return 0; /* ë°œê²¬ë˜ì§€ ì•Šì•˜ë‹¤ */
 }
 
 char *file_loadfile2(int clustno, int *psize, int *fat)
@@ -82,7 +82,7 @@ char *file_loadfile2(int clustno, int *psize, int *fat)
 	file_loadfile(clustno, size, buf, fat, (char *) (ADR_DISKIMG + 0x003e00));
 	if (size >= 17) {
 		size2 = tek_getsize(buf);
-		if (size2 > 0) {	/* tek ¾ĞÃàÀÌ °É·Á ÀÖ¾ú´Ù */
+		if (size2 > 0) {	/* tek ì••ì¶•ì´ ê±¸ë ¤ ìˆì—ˆë‹¤ */
 			buf2 = (char *) memman_alloc_4k(memman, size2);
 			tek_decomp(buf, buf2, size2);
 			memman_free_4k(memman, (int) buf, size);

@@ -1,4 +1,4 @@
-/* À©µµ¿ì °ü°è */
+/* ìœˆë„ìš° ê´€ê³„ */
 
 #include "bootpack.h"
 

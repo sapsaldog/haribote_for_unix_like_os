@@ -1,4 +1,4 @@
-/* bootpackÀÇ ¸ŞÀÎ */
+/* bootpackì˜ ë©”ì¸ */
 
 #include "bootpack.h"
 #include <stdio.h>
@@ -15,18 +15,18 @@ void HariMain(void)
 
 	init_gdtidt();
 	init_pic();
-	io_sti(); /* IDT/PICÀÇ ÃÊ±âÈ­°¡ ³¡³µÀ¸¹Ç·Î CPUÀÇ ÀÎÅÍ·´Æ® ±İÁö¸¦ ÇØÁ¦ */
+	io_sti(); /* IDT/PICì˜ ì´ˆê¸°í™”ê°€ ëë‚¬ìœ¼ë¯€ë¡œ CPUì˜ ì¸í„°ëŸ½íŠ¸ ê¸ˆì§€ë¥¼ í•´ì œ */
 	fifo8_init(&keyfifo, 32, keybuf);
 	fifo8_init(&mousefifo, 128, mousebuf);
-	io_out8(PIC0_IMR, 0xf9); /* PIC1¿Í Å°º¸µå¸¦ Çã°¡(11111001) */
-	io_out8(PIC1_IMR, 0xef); /* ¸¶¿ì½º¸¦ Çã°¡(11101111) */
+	io_out8(PIC0_IMR, 0xf9); /* PIC1ì™€ í‚¤ë³´ë“œë¥¼ í—ˆê°€(11111001) */
+	io_out8(PIC1_IMR, 0xef); /* ë§ˆìš°ìŠ¤ë¥¼ í—ˆê°€(11101111) */
 
 	init_keyboard();
 	enable_mouse(&mdec);
 
 	init_palette();
 	init_screen8(binfo->vram, binfo->scrnx, binfo->scrny);
-	mx = (binfo->scrnx - 16) / 2; /* È­¸é Áß¾ÓÀÌ µÇµµ·Ï ÁÂÇ¥ °è»ê */
+	mx = (binfo->scrnx - 16) / 2; /* í™”ë©´ ì¤‘ì•™ì´ ë˜ë„ë¡ ì¢Œí‘œ ê³„ì‚° */
 	my = (binfo->scrny - 28 - 16) / 2;
 	init_mouse_cursor8(mcursor, COL8_008484);
 	putblock8_8(binfo->vram, binfo->scrnx, 16, 16, mx, my, mcursor, 16);
@@ -52,7 +52,7 @@ void HariMain(void)
 				i = fifo8_get(&mousefifo);
 				io_sti();
 				if (mouse_decode(&mdec, i) != 0) {
-					/* µ¥ÀÌÅÍ°¡ 3¹ÙÀÌÆ® ¸ğ¿´À¸¹Ç·Î Ç¥½Ã */
+					/* ë°ì´í„°ê°€ 3ë°”ì´íŠ¸ ëª¨ì˜€ìœ¼ë¯€ë¡œ í‘œì‹œ */
 					sprintf(s, "[lcr %4d %4d]", mdec.x, mdec.y);
 					if ((mdec.btn & 0x01) != 0) {
 						s[1] = 'L';
@@ -65,8 +65,8 @@ void HariMain(void)
 					}
 					boxfill8(binfo->vram, binfo->scrnx, COL8_008484, 32, 16, 32 + 15 * 8 - 1, 31);
 					putfonts8_asc(binfo->vram, binfo->scrnx, 32, 16, COL8_FFFFFF, s);
-					/* ¸¶¿ì½º Ä¿¼­ÀÇ ÀÌµ¿ */
-					boxfill8(binfo->vram, binfo->scrnx, COL8_008484, mx, my, mx + 15, my + 15); /* ¸¶¿ì½º Áö¿î´Ù */
+					/* ë§ˆìš°ìŠ¤ ì»¤ì„œì˜ ì´ë™ */
+					boxfill8(binfo->vram, binfo->scrnx, COL8_008484, mx, my, mx + 15, my + 15); /* ë§ˆìš°ìŠ¤ ì§€ìš´ë‹¤ */
 					mx += mdec.x;
 					my += mdec.y;
 					if (mx < 0) {
@@ -82,9 +82,9 @@ void HariMain(void)
 						my = binfo->scrny - 16;
 					}
 					sprintf(s, "(%3d, %3d)", mx, my);
-					boxfill8(binfo->vram, binfo->scrnx, COL8_008484, 0, 0, 79, 15); /* ÁÂÇ¥ Áö¿î´Ù */
-					putfonts8_asc(binfo->vram, binfo->scrnx, 0, 0, COL8_FFFFFF, s); /* ÁÂÇ¥ ¾´´Ù */
-					putblock8_8(binfo->vram, binfo->scrnx, 16, 16, mx, my, mcursor, 16); /* ¸¶¿ì½º ±×¸°´Ù */
+					boxfill8(binfo->vram, binfo->scrnx, COL8_008484, 0, 0, 79, 15); /* ì¢Œí‘œ ì§€ìš´ë‹¤ */
+					putfonts8_asc(binfo->vram, binfo->scrnx, 0, 0, COL8_FFFFFF, s); /* ì¢Œí‘œ ì“´ë‹¤ */
+					putblock8_8(binfo->vram, binfo->scrnx, 16, 16, mx, my, mcursor, 16); /* ë§ˆìš°ìŠ¤ ê·¸ë¦°ë‹¤ */
 				}
 			}
 		}
@@ -99,12 +99,12 @@ unsigned int memtest(unsigned int start, unsigned int end)
 	char flg486 = 0;
 	unsigned int eflg, cr0, i;
 
-	/* 386ÀÎ°¡,  486ÀÌÈÄÀÎ°¡ÀÇ È®ÀÎ */
+	/* 386ì¸ê°€,  486ì´í›„ì¸ê°€ì˜ í™•ì¸ */
 	eflg = io_load_eflags();
 	eflg |= EFLAGS_AC_BIT; /* AC-bit = 1 */
 	io_store_eflags(eflg);
 	eflg = io_load_eflags();
-	if ((eflg & EFLAGS_AC_BIT) != 0) { /* 386¿¡¼­´Â AC=1À¸·Î ÇØµµ ÀÚµ¿À¸·Î 0¿¡ µ¹¾Æ¿Í ¹ö¸°´Ù */
+	if ((eflg & EFLAGS_AC_BIT) != 0) { /* 386ì—ì„œëŠ” AC=1ìœ¼ë¡œ í•´ë„ ìë™ìœ¼ë¡œ 0ì— ëŒì•„ì™€ ë²„ë¦°ë‹¤ */
 		flg486 = 1;
 	}
 	eflg &= ~EFLAGS_AC_BIT; /* AC-bit = 0 */
@@ -112,7 +112,7 @@ unsigned int memtest(unsigned int start, unsigned int end)
 
 	if (flg486 != 0) {
 		cr0 = load_cr0();
-		cr0 |= CR0_CACHE_DISABLE; /* Ä³½¬ ±İÁö */
+		cr0 |= CR0_CACHE_DISABLE; /* ìºì‰¬ ê¸ˆì§€ */
 		store_cr0(cr0);
 	}
 
@@ -120,7 +120,7 @@ unsigned int memtest(unsigned int start, unsigned int end)
 
 	if (flg486 != 0) {
 		cr0 = load_cr0();
-		cr0 &= ~CR0_CACHE_DISABLE; /* Ä³½¬ Çã°¡ */
+		cr0 &= ~CR0_CACHE_DISABLE; /* ìºì‰¬ í—ˆê°€ */
 		store_cr0(cr0);
 	}
 
@@ -132,19 +132,19 @@ unsigned int memtest_sub(unsigned int start, unsigned int end)
 	unsigned int i, *p, old, pat0 = 0xaa55aa55, pat1 = 0x55aa55aa;
 	for (i = start; i <= end; i += 0x1000) {
 		p = (unsigned int *) (i + 0xffc);
-		old = *p;			/* ÀÌÀüÀÇ °ªÀ» ±â¾ïÇØ µĞ´Ù */
-		*p = pat0;			/* ½ÃÇè»ï¾Æ ½á º»´Ù */
-		*p ^= 0xffffffff;	/* ±×¸®°í ±×°ÍÀ» ¹İÀüÇØ º»´Ù */
-		if (*p != pat1) {	/* ¹İÀü °á°ú°¡ µÇ¾ú´ÂÁö?  */
+		old = *p;			/* ì´ì „ì˜ ê°’ì„ ê¸°ì–µí•´ ë‘”ë‹¤ */
+		*p = pat0;			/* ì‹œí—˜ì‚¼ì•„ ì¨ ë³¸ë‹¤ */
+		*p ^= 0xffffffff;	/* ê·¸ë¦¬ê³  ê·¸ê²ƒì„ ë°˜ì „í•´ ë³¸ë‹¤ */
+		if (*p != pat1) {	/* ë°˜ì „ ê²°ê³¼ê°€ ë˜ì—ˆëŠ”ì§€?  */
 not_memory:
 			*p = old;
 			break;
 		}
-		*p ^= 0xffffffff;	/* ÇÑ¹ø ´õ ¹İÀüÇØ º»´Ù */
-		if (*p != pat0) {	/* ¿ø·¡´ë·Î µ¹¾Æ°¬´ÂÁö?  */
+		*p ^= 0xffffffff;	/* í•œë²ˆ ë” ë°˜ì „í•´ ë³¸ë‹¤ */
+		if (*p != pat0) {	/* ì›ë˜ëŒ€ë¡œ ëŒì•„ê°”ëŠ”ì§€?  */
 			goto not_memory;
 		}
-		*p = old;			/* ¿ø·¡´ë·Î µÇµ¹¸°´Ù */
+		*p = old;			/* ì›ë˜ëŒ€ë¡œ ë˜ëŒë¦°ë‹¤ */
 	}
 	return i;
 }
