@@ -4,13 +4,13 @@ void write_mem8(int addr, int data);
 
 void HariMain(void)
 {
-	int i; /* ë³€ìˆ˜ ì„ ì–¸.ië¼ê³  í•˜ëŠ” ë³€ìˆ˜ëŠ” 32ë¹„íŠ¸ ì •ìˆ˜í˜• */
+	int i; /* º¯¼ö ¼±¾ğ.i¶ó°í ÇÏ´Â º¯¼ö´Â 32ºñÆ® Á¤¼öÇü */
 
 	for (i = 0xa0000; i <= 0xaffff; i++) {
 		write_mem8(i, i & 0x0f);
 	}
 
 	for (;;) {
-		io_hlt();
+//		io_hlt();
 	}
 }
