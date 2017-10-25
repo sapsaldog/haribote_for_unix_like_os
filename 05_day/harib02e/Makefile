@@ -30,7 +30,7 @@ hankaku_need_to_redefine_symbol_name.o: hankaku.bin
 	${BIN2OBJ} -I binary $< -O elf32-i386 $@ -B i386 
 
 hankaku.o: hankaku_need_to_redefine_symbol_name.o
-	${BIN2OBJ} -I elf32-i386 $< -O elf32-i386 $@ -B i386 --redefine-sym _binary_hankaku_bin_start=hankaku
+	${BIN2OBJ} -I elf32-i386 $< -O elf32-i386 $@ --redefine-sym _binary_hankaku_bin_start=hankaku
 
 asmhead.bin: asmhead.asm
 	nasm $< -f bin -o $@
