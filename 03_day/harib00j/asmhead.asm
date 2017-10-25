@@ -13,7 +13,7 @@ SCRNX	EQU		0x0ff4			; 해상도의 X
 SCRNY	EQU		0x0ff6			; 해상도의 Y
 VRAM	EQU		0x0ff8			; 그래픽 버퍼의 개시 번지
 
-		ORG		0xc200		; 이 프로그램이 어디에 Read되는가
+[org 0x8200]		; 이 프로그램이 어디에 Read되는가
 
 ; 화면 모드를 설정
 
