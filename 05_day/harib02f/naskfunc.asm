@@ -1,7 +1,7 @@
 ; naskfunc
 ; TAB=4
 
-[bits 32]					; 32비트 모드용의 기계어를 만든다
+[bits 32]					; 32비트 모드용의 기계어를 만든다 
 
 GLOBAL	io_hlt, io_cli, io_sti, io_stihlt
 GLOBAL	io_in8, io_in16,  io_in32

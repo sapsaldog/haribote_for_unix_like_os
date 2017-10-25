@@ -13,7 +13,7 @@ SCRNX	EQU		0x0ff4			; 해상도의 X
 SCRNY	EQU		0x0ff6			; 해상도의 Y
 VRAM	EQU		0x0ff8			; 그래픽 버퍼의 개시 번지
 
-[bits 16]
+[bits 16] ; harib02e에서 제작된 asm 파일을 테스트함
 [org 0x8200]
 
 ; 화면 모드를 설정
