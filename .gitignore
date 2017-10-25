@@ -2,3 +2,5 @@
 *.bin
 *.sys
 *.elf
+.DS_Store
+tools/build/
