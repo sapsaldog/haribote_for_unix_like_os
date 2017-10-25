@@ -1,93 +1,56 @@
-TOOLPATH = ../z_tools/
-INCPATH  = ../z_tools/haribote/
+C_SOURCES = $(wildcard *.c)
 
-MAKE     = $(TOOLPATH)make.exe -r
-NASK     = $(TOOLPATH)nask.exe
-CC1      = $(TOOLPATH)cc1.exe -I$(INCPATH) -Os -Wall -quiet
-GAS2NASK = $(TOOLPATH)gas2nask.exe -a
-OBJ2BIM  = $(TOOLPATH)obj2bim.exe
-MAKEFONT = $(TOOLPATH)makefont.exe
-BIN2OBJ  = $(TOOLPATH)bin2obj.exe
-BIM2HRB  = $(TOOLPATH)bim2hrb.exe
-RULEFILE = $(TOOLPATH)haribote/haribote.rul
-EDIMG    = $(TOOLPATH)edimg.exe
-IMGTOL   = $(TOOLPATH)imgtol.com
-COPY     = copy
-DEL      = del
+OBJ = ${C_SOURCES:.c=.o} 
+# modified to use makefile from harib02e
+# Change this if your cross-compiler is somewhere else
+CC = /usr/local/i386elfgcc/bin/i386-elf-gcc
+GDB = /usr/local/i386elfgcc/bin/i386-elf-gdb
+BIN2OBJ = /usr/local/i386elfgcc/bin/i386-elf-objcopy
+MAKEFONT = ../../tools/build/makefont
+# -g: Use debugging symbols in gcc
+CFLAGS = -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs \
+		 -Wall -Wextra
 
-# 디폴트 동작
+# Notice how dependencies are built as needed
 
-default :
-	$(MAKE) img
+os-image.bin : ipl10.bin asmhead.bin haribote.sys
+	cat $^ > os-image.bin
 
-# 파일 생성 규칙
+haribote.sys: naskfunc.o bootpack.o hankaku.o
+	i386-elf-ld -o $@ -Ttext 0x00280000 $^ --oformat binary
 
-ipl10.bin : ipl10.nas Makefile
-	$(NASK) ipl10.nas ipl10.bin ipl10.lst
+# Used for debugging purposes
+haribote.elf: naskfunc.o bootpack.o hankaku.o
+	i386-elf-ld -o $@ -Ttext 0x00280000 $^
 
-asmhead.bin : asmhead.nas Makefile
-	$(NASK) asmhead.nas asmhead.bin asmhead.lst
+hankaku.bin: hankaku.txt
+	${MAKEFONT} $< $@
 
-bootpack.gas : bootpack.c Makefile
-	$(CC1) -o bootpack.gas bootpack.c
+hankaku_need_to_redefine_symbol_name.o: hankaku.bin
+	${BIN2OBJ} -I binary $< -O elf32-i386 $@ -B i386 
 
-bootpack.nas : bootpack.gas Makefile
-	$(GAS2NASK) bootpack.gas bootpack.nas
+hankaku.o: hankaku_need_to_redefine_symbol_name.o
+	${BIN2OBJ} -I elf32-i386 $< -O elf32-i386 $@ --redefine-sym _binary_hankaku_bin_start=hankaku
 
-bootpack.obj : bootpack.nas Makefile
-	$(NASK) bootpack.nas bootpack.obj bootpack.lst
+asmhead.bin: asmhead.asm
+	nasm $< -f bin -o $@
 
-naskfunc.obj : naskfunc.nas Makefile
-	$(NASK) naskfunc.nas naskfunc.obj naskfunc.lst
+ipl10.bin: ipl10.asm
+	nasm $< -f bin -o $@
 
-hankaku.bin : hankaku.txt Makefile
-	$(MAKEFONT) hankaku.txt hankaku.bin
+# Open the connection to qemu and load our kernel-object file with symbols
+debug: os-image.bin haribote.elf
+	qemu-system-i386 -s -S -fda os-image.bin -d guest_errors,int &
+	${GDB} -ex "target remote localhost:1234" -ex "symbol-file haribote.elf"
 
-hankaku.obj : hankaku.bin Makefile
-	$(BIN2OBJ) hankaku.bin hankaku.obj _hankaku
+run: os-image.bin
+	qemu-system-i386 -fda $<
 
-bootpack.bim : bootpack.obj naskfunc.obj hankaku.obj Makefile
-	$(OBJ2BIM) @$(RULEFILE) out:bootpack.bim stack:3136k map:bootpack.map \
-		bootpack.obj naskfunc.obj hankaku.obj
-# 3MB+64KB=3136KB
+%.o: %.c ${HEADERS}
+	${CC} ${CFLAGS} -ffreestanding -c $< -o $@
 
-bootpack.hrb : bootpack.bim Makefile
-	$(BIM2HRB) bootpack.bim bootpack.hrb 0
+%.o: %.asm
+	nasm $< -f elf -o $@
 
-haribote.sys : asmhead.bin bootpack.hrb Makefile
-	copy /B asmhead.bin+bootpack.hrb haribote.sys
-
-haribote.img : ipl10.bin haribote.sys Makefile
-	$(EDIMG)   imgin:../z_tools/fdimg0at.tek \
-		wbinimg src:ipl10.bin len:512 from:0 to:0 \
-		copy from:haribote.sys to:@: \
-		imgout:haribote.img
-
-# 커맨드
-
-img :
-	$(MAKE) haribote.img
-
-run :
-	$(MAKE) img
-	$(COPY) haribote.img ..\z_tools\qemu\fdimage0.bin
-	$(MAKE) -C ../z_tools/qemu
-
-install :
-	$(MAKE) img
-	$(IMGTOL) w a: haribote.img
-
-clean :
-	-$(DEL) *.bin
-	-$(DEL) *.lst
-	-$(DEL) *.gas
-	-$(DEL) *.obj
-	-$(DEL) bootpack.nas
-	-$(DEL) bootpack.map
-	-$(DEL) bootpack.bim
-	-$(DEL) bootpack.hrb
-	-$(DEL) haribote.sys
-
-src_only :
-	$(MAKE) clean
-	-$(DEL) haribote.img
+clean:
+	rm *.bin *.o *.sys *.elf
