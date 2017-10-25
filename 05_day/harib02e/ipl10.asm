@@ -3,7 +3,7 @@
 
 CYLS	EQU		10				; 어디까지 Read할까
 
-		ORG		0x7c00			; 이 프로그램이 어디에 Read되는가
+[org 0x7c00] ; 이 프로그램이 어디에 read되는가
 
 ; 이하는 표준적인 FAT12 포맷 플로피 디스크를 위한 기술
 
@@ -78,7 +78,8 @@ next:
 ; 다 읽었으므로 haribote.sys를 실행한다!
 
 		MOV		[0x0ff0], CH		; IPL이 어디까지 읽었는지를 메모
-		JMP		0xc200
+
+		jmp 	0x8200
 
 error:
 		MOV		AX,0
@@ -102,6 +103,6 @@ msg:
 		DB		0x0a			; 개행
 		DB		0
 
-		RESB	0x7dfe-$			; 0x7dfe까지를 0x00로 채우는 명령
+times 510 - ($-$$) db 0 ; 0x7dfe까지를 0x00로 채우는 명령
 
 		DB		0x55, 0xaa
