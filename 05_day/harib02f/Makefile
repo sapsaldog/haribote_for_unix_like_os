@@ -1,7 +1,7 @@
 C_SOURCES = $(wildcard *.c)
 
 OBJ = ${C_SOURCES:.c=.o} 
-
+# modified to use makefile from harib02e
 # Change this if your cross-compiler is somewhere else
 CC = /usr/local/i386elfgcc/bin/i386-elf-gcc
 GDB = /usr/local/i386elfgcc/bin/i386-elf-gdb
