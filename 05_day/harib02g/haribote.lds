@@ -13,5 +13,5 @@ SECTIONS
     *(.rodata)
     hankaku = _binary_hankaku_bin_start;
   }
-  .bss : { *(.rodata) }
+  .bss : { *(.bss) }
 }
