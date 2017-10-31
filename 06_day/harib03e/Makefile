@@ -1,93 +1,53 @@
-OBJS_BOOTPACK = bootpack.obj naskfunc.obj hankaku.obj graphic.obj dsctbl.obj \
-		int.obj
+CC = /usr/local/i386elfgcc/bin/i386-elf-gcc
+LD = /usr/local/i386elfgcc/bin/i386-elf-ld
+GDB = /usr/local/i386elfgcc/bin/i386-elf-gdb
+OBJCOPY = /usr/local/i386elfgcc/bin/i386-elf-objcopy
 
-TOOLPATH = ../z_tools/
-INCPATH  = ../z_tools/haribote/
+TOOL_DIR = ../../tools
+INC_DIR = $(TOOL_DIR)/golibc
+MAKEFONT = $(TOOL_DIR)/makefont/makefont
 
-MAKE     = $(TOOLPATH)make.exe -r
-NASK     = $(TOOLPATH)nask.exe
-CC1      = $(TOOLPATH)cc1.exe -I$(INCPATH) -Os -Wall -quiet
-GAS2NASK = $(TOOLPATH)gas2nask.exe -a
-OBJ2BIM  = $(TOOLPATH)obj2bim.exe
-MAKEFONT = $(TOOLPATH)makefont.exe
-BIN2OBJ  = $(TOOLPATH)bin2obj.exe
-BIM2HRB  = $(TOOLPATH)bim2hrb.exe
-RULEFILE = $(TOOLPATH)haribote/haribote.rul
-EDIMG    = $(TOOLPATH)edimg.exe
-IMGTOL   = $(TOOLPATH)imgtol.com
-COPY     = copy
-DEL      = del
+CFLAGS = -g -m32 -nostdlib -nostdinc -fno-stack-protector -nostartfiles -nodefaultlibs \
+		 -Wall -Wextra
+LIB_OPT = -lgolibc
 
-# 디폴트 동작
+C_SOURCES = $(wildcard *.c)
+OBJ = ${C_SOURCES:.c=.o} 
+OBJ += naskfunc.o hankaku.o 
 
-default :
-	$(MAKE) img
+os-image.bin : ipl10.bin asmhead.bin haribote.sys
+	cat $^ > os-image.bin
 
-# 파일 생성 규칙
+haribote.sys: $(OBJ)
+	${LD} -T haribote.lds -o $@ $^ --oformat binary $(LIB_OPT)
 
-ipl10.bin : ipl10.nas Makefile
-	$(NASK) ipl10.nas ipl10.bin ipl10.lst
+haribote.elf: $(OBJ)
+	${LD} -T haribote.lds -o $@ $^ $(LIB_OPT)
 
-asmhead.bin : asmhead.nas Makefile
-	$(NASK) asmhead.nas asmhead.bin asmhead.lst
+hankaku.bin: hankaku.txt
+	${MAKEFONT} $< $@
 
-hankaku.bin : hankaku.txt Makefile
-	$(MAKEFONT) hankaku.txt hankaku.bin
+hankaku.o: hankaku.bin
+	${OBJCOPY} --readonly-text -I binary $< -O elf32-i386 $@ -B i386 
 
-hankaku.obj : hankaku.bin Makefile
-	$(BIN2OBJ) hankaku.bin hankaku.obj _hankaku
+asmhead.bin: asmhead.asm
+	nasm $< -f bin -o $@
 
-bootpack.bim : $(OBJS_BOOTPACK) Makefile
-	$(OBJ2BIM) @$(RULEFILE) out:bootpack.bim stack:3136k map:bootpack.map \
-		$(OBJS_BOOTPACK)
-# 3MB+64KB=3136KB
+ipl10.bin: ipl10.asm
+	nasm $< -f bin -o $@
 
-bootpack.hrb : bootpack.bim Makefile
-	$(BIM2HRB) bootpack.bim bootpack.hrb 0
+debug: os-image.bin haribote.elf
+	qemu-system-i386 -s -S -fda os-image.bin -d guest_errors,int &
+	${GDB} -ex "target remote localhost:1234" -ex "symbol-file haribote.elf"
 
-haribote.sys : asmhead.bin bootpack.hrb Makefile
-	copy /B asmhead.bin+bootpack.hrb haribote.sys
+run: os-image.bin
+	qemu-system-i386 -fda $<
 
-haribote.img : ipl10.bin haribote.sys Makefile
-	$(EDIMG)   imgin:../z_tools/fdimg0at.tek \
-		wbinimg src:ipl10.bin len:512 from:0 to:0 \
-		copy from:haribote.sys to:@: \
-		imgout:haribote.img
+%.o: %.c ${HEADERS}
+	${CC} ${CFLAGS} -I${INC_DIR} -ffreestanding -c $< -o $@
 
-# 일반 규칙
+%.o: %.asm
+	nasm $< -f elf -o $@
 
-%.gas : %.c Makefile
-	$(CC1) -o $*.gas $*.c
-
-%.nas : %.gas Makefile
-	$(GAS2NASK) $*.gas $*.nas
-
-%.obj : %.nas Makefile
-	$(NASK) $*.nas $*.obj $*.lst
-
-# 커맨드
-
-img :
-	$(MAKE) haribote.img
-
-run :
-	$(MAKE) img
-	$(COPY) haribote.img ..\z_tools\qemu\fdimage0.bin
-	$(MAKE) -C ../z_tools/qemu
-
-install :
-	$(MAKE) img
-	$(IMGTOL) w a: haribote.img
-
-clean :
-	-$(DEL) *.bin
-	-$(DEL) *.lst
-	-$(DEL) *.obj
-	-$(DEL) bootpack.map
-	-$(DEL) bootpack.bim
-	-$(DEL) bootpack.hrb
-	-$(DEL) haribote.sys
-
-src_only :
-	$(MAKE) clean
-	-$(DEL) haribote.img
+clean:
+	rm *.bin *.o *.sys *.elf
