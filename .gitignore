@@ -1,7 +1,9 @@
+.DS_Store
+
 *.o
 *.bin
 *.sys
 *.elf
 *.a
-.DS_Store
-tools/build/
+
+tools/makefont/makefont
