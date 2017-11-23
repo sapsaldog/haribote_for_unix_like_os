@@ -1,7 +1,9 @@
 ; haribote-ipl
 ; TAB=4
 
-		ORG		0x7c00			; 이 프로그램이 어디에 Read되는가
+CYLS	EQU		10				; 어디까지 Read할까
+
+[org 0x7c00] ; 이 프로그램이 어디에 read되는가
 
 ; 이하는 표준적인 FAT12 포맷 플로피 디스크를 위한 기술
 
@@ -60,16 +62,24 @@ retry:
 next:
 		MOV		AX, ES			; 주소를 0x200 진행한다
 		ADD		AX,0x0020
-		MOV		ES, AX			; ADD ES, 0x020라고 하는 명령이 없기 때문에 이렇게 하고 있다
+		MOV		ES, AX			; ADD ES, 0x020 라고 하는 명령이 없기 때문에 이렇게 하고 있다
 		ADD		CL, 1			; CL에 1을 더한다
 		CMP		CL, 18			; CL와 18을 비교
 		JBE		readloop		; CL <= 18 이라면 readloop에
+		MOV		CL,1
+		ADD		DH,1
+		CMP		DH,2
+		JB		readloop		; DH < 2 라면 readloop에
+		MOV		DH,0
+		ADD		CH,1
+		CMP		CH,CYLS
+		JB		readloop		; CH < CYLS 라면 readloop에
 
-; 다 읽었지만 우선 할일이 없기 때문에 sleeve
+; 다 읽었으므로 haribote.sys를 실행한다!
 
-fin:
-		HLT					; 무엇인가 있을 때까지 CPU를 정지시킨다
-		JMP		fin			; Endless Loop
+		MOV		[0x0ff0], CH		; IPL이 어디까지 읽었는지를 메모
+
+		jmp 	0x8200 ;0xc200
 
 error:
 		MOV		AX,0
@@ -84,12 +94,15 @@ putloop:
 		MOV		BX, 15			; 칼라 코드
 		INT		0x10			; 비디오 BIOS 호출
 		JMP		putloop
+fin:
+		HLT					; 무엇인가 있을 때까지 CPU를 정지시킨다
+		JMP		fin			; Endless Loop
 msg:
 		DB		0x0a, 0x0a		; 개행을 2개
 		DB		"load error"
 		DB		0x0a			; 개행
 		DB		0
 
-		RESB	0x7dfe-$			; 0x7dfe까지를 0x00로 채우는 명령
+times 510 - ($-$$) db 0 ; 0x7dfe까지를 0x00로 채우는 명령
 
 		DB		0x55, 0xaa

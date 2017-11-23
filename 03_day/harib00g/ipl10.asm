@@ -1,7 +1,7 @@
 ; haribote-ipl
 ; TAB=4
 
-CYLS	EQU		10				; 어디까지 Rdad할까
+CYLS	EQU		10				; 어디까지 Read할까
 
 [org 0x7c00] ; 이 프로그램이 어디에 read되는가
 
